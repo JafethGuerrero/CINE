@@ -1,23 +1,17 @@
 <?php
 session_start();
 
-// Comprobar si ya hay un inicio de sesión
-if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] == 'admin') {
-        header("Location: admin.php");
-        exit();
-    }
+if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+    header("Location: admin.php");
+    exit();
 }
 
-// Lógica de autenticación (ejemplo simple)
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Aquí deberías verificar las credenciales con tu base de datos
-    // Por ejemplo:
     if ($username === 'Administrador' && $password === 'admin') {
-        $_SESSION['user_role'] = 'admin'; // Guarda el rol de usuario en la sesión
+        $_SESSION['user_role'] = 'admin';
         header("Location: admin.php");
         exit();
     } else {
@@ -121,4 +115,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
 </body>
+<footer style="text-align:center;">© Cine - <?php echo date("Y");?></footer> 
 </html>

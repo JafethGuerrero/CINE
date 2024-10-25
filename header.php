@@ -40,7 +40,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php">Cerrar Sesión</a>
+                        <a class="nav-link" href="logout.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </div>

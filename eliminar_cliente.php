@@ -90,5 +90,5 @@ $formatted_phone = (strlen($phone) == 12) ? substr($phone, 0, 3) . '-' . substr(
       </div>
   </div>
 </body>
-<footer style="text-align:center;">© Cine 2024 - <?php echo date("Y");?></footer> 
+<footer style="text-align:center;">© Cine - <?php echo date("Y");?></footer> 
 </html>

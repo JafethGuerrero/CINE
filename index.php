@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+// Verifica si el usuario está logueado como administrador
+if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+    header("Location: admin.php"); // Redirige al panel del admin si está logueado
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -42,6 +51,7 @@
             cursor: pointer;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
             transition: background-color 0.3s;
+            text-decoration: none; /* Quitar subrayado del enlace */
         }
 
         /* Efecto hover para el botón */
@@ -53,11 +63,14 @@
 <body>
 
     <div class="main-container">
-        <img src="ruta/a/tu/imagen_sinsajo.png" alt="Logo Sinsajo" class="logo"> <!-- Cambia la ruta -->
+        <img src="imagen_sinsajo.png" alt="Logo Sinsajo" class="logo"> <!-- Asegúrate de que la imagen esté en la misma carpeta -->
         <h1>Bienvenido al Cine</h1>
         <p>¡Disfruta de la mejor experiencia cinematográfica!</p>
-        <a href="login.php"><button class="btn-entrar">Entrar</button></a>
+        <a href="login.php">
+            <button class="btn-entrar">Entrar</button>
+        </a>
     </div>
 
 </body>
+<footer style="text-align:center;">© Cine - <?php echo date("Y");?></footer> 
 </html>

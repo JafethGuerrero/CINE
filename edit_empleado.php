@@ -100,6 +100,6 @@ if ($post === null) {
       </div>
   </div>
 </body>
-<footer style="text-align:center;">© Cine 2024 - <?php echo date("Y");?></footer> 
+<footer style="text-align:center;">©Cine - <?php echo date("Y");?></footer> 
 </html>
 

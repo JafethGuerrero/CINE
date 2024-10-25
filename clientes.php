@@ -43,11 +43,7 @@ $stmt = sqlsrv_query($conn, $sql);
     </table>
     <a href="alta_cliente.php" class="btn btn-primary">Agregar Cliente</a>
 </div>
-
-<div class="footer">
-    <small>© 2024 Cine</small>
-</div>
-
 </body>
+<footer style="text-align:center;">© Cine - <?php echo date("Y");?></footer> 
 </html>
 

@@ -47,11 +47,7 @@ $stmt = sqlsrv_query($conn, $sql);
     </table>
     <a href="alta_empleado.php" class="btn btn-primary">Agregar Empleado</a>
 </div>
-
-<div class="footer">
-    <small>© 2024 Cine</small>
-</div>
-
 </body>
+<footer style="text-align:center;">© Cine - <?php echo date("Y");?></footer> 
 </html>
 

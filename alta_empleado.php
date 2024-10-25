@@ -168,10 +168,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
         </div>
     </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <small>© 2024 Cine</small>
-    </div>
 </body>
+<footer style="text-align:center;">© Cine - <?php echo date("Y");?></footer> 
 </html>
