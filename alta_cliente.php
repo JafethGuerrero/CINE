@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'footer.php';
 include 'conexion.php'; // Asegúrate de que este archivo contenga la lógica de conexión a la base de datos
 
 // Notificación de estado
@@ -160,5 +161,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </body>
-<footer style="text-align:center;">© Cine - <?php echo date("Y");?></footer> 
 </html>

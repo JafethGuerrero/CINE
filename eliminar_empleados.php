@@ -1,6 +1,7 @@
 <?php
 include("header.php"); // Verifica que este archivo exista en la ruta correcta
 include("conexion.php");
+include "footer.php";
 
 /* Recibimos el id por URL */
 $dato = isset($_GET['id']) ? $_GET['id'] : null;
@@ -94,5 +95,4 @@ if ($post === null) {
       </div>
   </div>
 </body>
-<footer style="text-align:center;">© Cine - <?php echo date("Y");?></footer> 
 </html>

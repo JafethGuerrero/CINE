@@ -1,5 +1,8 @@
 <?php
 session_start();
+include 'footer.php';
+
+
 // Aquí puedes agregar la lógica de verificación de sesión más adelante
 ?>
 <!DOCTYPE html>
@@ -170,5 +173,4 @@ session_start();
         </div>
     </div>
 </body>
-<footer style="text-align:center;">© Cine - <?php echo date("Y");?></footer> 
 </html>

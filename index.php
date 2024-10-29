@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'footer.php';
 
 // Verifica si el usuario está logueado como administrador
 if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
@@ -31,12 +32,17 @@ if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
         .main-container {
             text-align: center;
             color: #FFF; /* Color del texto */
+            background: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
         /* Estilo de la imagen */
         .logo {
-            width: 150px; /* Ajusta el tamaño según sea necesario */
+            width: 250px; /* Ajusta el tamaño del logo */
             margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.7)); /* Sombra para que resalte más */
         }
 
         /* Estilo del botón Entrar */
@@ -50,20 +56,21 @@ if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
             border-radius: 5px;
             cursor: pointer;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
             text-decoration: none; /* Quitar subrayado del enlace */
         }
 
         /* Efecto hover para el botón */
         .btn-entrar:hover {
             background-color: #FFC107;
+            transform: scale(1.05); /* Efecto de aumento */
         }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <img src="imagen_sinsajo.png" alt="Logo Sinsajo" class="logo"> <!-- Asegúrate de que la imagen esté en la misma carpeta -->
+        <img src="Sinsajo.jpg" alt="Logo del Cine" class="logo">
         <h1>Bienvenido al Cine</h1>
         <p>¡Disfruta de la mejor experiencia cinematográfica!</p>
         <a href="login.php">
@@ -72,5 +79,4 @@ if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
     </div>
 
 </body>
-<footer style="text-align:center;">© Cine - <?php echo date("Y");?></footer> 
 </html>

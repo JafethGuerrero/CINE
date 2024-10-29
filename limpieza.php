@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Limpieza - Cine</title>
     <style>
+        /* Barra de navegación */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #4CAF50;
+            padding: 10px 20px;
+            color: white;
+            font-size: 1.2em;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0 15px;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
         /* Estilos generales */
         body {
             font-family: Arial, sans-serif;
@@ -102,6 +120,17 @@
     </style>
 </head>
 <body>
+
+    <!-- Barra de navegación -->
+    <div class="navbar">
+        <div>Panel de Control - Cine</div>
+        <div>
+            <a href="#inicio">Inicio</a>
+            <a href="#salas">Salas</a>
+            <a href="#reportes">Reportes</a>
+            <a href="#perfil">Perfil</a>
+        </div>
+    </div>
 
     <h1>Panel de Limpieza</h1>
     <div class="container">
@@ -223,38 +252,36 @@
                 document.getElementById("nuevoEncargado").value = "";
                 cerrarModal('agregarModal');
             } else {
-                alert("Por favor, ingrese el número de sala y el encargado.");
+                alert("Por favor, llene todos los campos.");
             }
         }
 
-        // Guardar cambios del modal de edición
+        // Guardar cambios en la edición de una sala
         function guardarEdicion() {
             const sala = document.getElementById("editarSalaNombre").value;
-            const nuevoEncargado = document.getElementById("editarEncargado").value;
+            const encargado = document.getElementById("editarEncargado").value;
+
             const filas = document.getElementById("tablaSalas").querySelectorAll("tbody tr");
-
-            // Buscar la sala y actualizar encargado
-            filas.forEach((fila) => {
-                if (fila.cells[0].innerText === sala) {
-                    fila.cells[1].innerText = nuevoEncargado;
+            for (let fila of filas) {
+                if (fila.cells[0].textContent === sala) {
+                    fila.cells[1].textContent = encargado;
+                    break;
                 }
-            });
-
+            }
             cerrarModal('editarModal');
         }
 
-                // Eliminar una fila de la tabla
-                function eliminarSala(boton) {
-            const fila = boton.parentNode.parentNode;
-            fila.remove();
+        // Eliminar una sala de la tabla
+        function eliminarSala(boton) {
+            boton.parentNode.parentNode.remove();
         }
 
-        // Actualizar el estado de la sala en la tabla
+        // Actualizar el estado de la sala
         function actualizarEstado(select) {
             const estado = select.value;
-            const fila = select.parentNode.parentNode;
-            fila.cells[2].innerText = estado;
+            select.parentNode.previousSibling.previousSibling.textContent = estado;
         }
     </script>
+
 </body>
 </html>

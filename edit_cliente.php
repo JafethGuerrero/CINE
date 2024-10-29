@@ -1,6 +1,7 @@
 <?php
 include("header.php"); // Verifica que este archivo exista en la ruta correcta
 include("conexion.php");
+include "footer.php";
 
 /* Recibimos el id por URL */
 $dato = isset($_GET['id']) ? $_GET['id'] : null;
@@ -98,5 +99,4 @@ $formatted_phone = (strlen($phone) == 12) ? substr($phone, 0, 3) . '-' . substr(
       </div>
   </div>
 </body>
-<footer style="text-align:center;">© Cine 2024 - <?php echo date("Y");?></footer> 
 </html>
