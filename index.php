@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'footer.php';
+include 'l_login.php';
 
 // Verifica si el usuario está logueado como administrador
 if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
