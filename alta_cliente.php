@@ -157,6 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="text" class="form-control" id="cuenta_bancaria" name="cuenta_bancaria" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Agregar Cliente</button>
+                <a href="clientes.php" class="btn btn-secondary">Cancelar</a> 
             </form>
         </div>
     </div>

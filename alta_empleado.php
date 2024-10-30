@@ -166,6 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="number" step="0.01" class="form-control" id="salario" name="salario" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Agregar Empleado</button>
+                <a href="empleado.php" class="btn btn-secondary">Cancelar</a> 
             </form>
         </div>
     </div>
