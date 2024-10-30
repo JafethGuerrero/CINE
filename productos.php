@@ -7,9 +7,9 @@ include 'footer.php'; // Incluir el footer
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Modificar la consulta SQL para incluir la búsqueda
-$sql = "SELECT * FROM Almacen";
+$sql = "SELECT * FROM Productos";
 if (!empty($searchTerm)) {
-    $sql .= " WHERE tipo_almacenamiento LIKE ? OR ubicacion_producto LIKE ?";
+    $sql .= " WHERE nombre_producto LIKE ? OR descripcion LIKE ?";
 }
 
 // Preparar y ejecutar la consulta
@@ -21,14 +21,14 @@ $stmt = sqlsrv_query($conn, $sql, $params);
 ?>
 
 <div class="container mt-5">
-    <h2 class="text-center">Lista de Almacén</h2>
-    
+    <h2 class="text-center">Lista de Productos</h2>
+
     <!-- Botones para ver productos y proveedores -->
     <div class="mb-3 text-center">
-        <a href="productos.php" class="btn btn-info">Ver Productos</a>
+        <a href="almacen.php" class="btn btn-info">Ver Almacen</a>
         <a href="proveedores.php" class="btn btn-warning">Ver Proveedores</a>
     </div>
-
+    
     <!-- Formulario de búsqueda -->
     <form id="search-form" class="mb-4">
         <div class="input-group">
@@ -44,30 +44,26 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>ID Producto</th>
-                    <th>ID Proveedor</th>
-                    <th>Ubicación Producto</th>
-                    <th>Cantidad</th>
-                    <th>Tipo Almacenamiento</th>
-                    <th>Fecha Reabastecimiento</th>
+                    <th>Nombre Producto</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Fecha Creación</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($row['id_almacen']); ?></td>
                         <td><?php echo htmlspecialchars($row['id_producto']); ?></td>
-                        <td><?php echo htmlspecialchars($row['id_proveedor']); ?></td>
-                        <td><?php echo htmlspecialchars($row['ubicacion_producto']); ?></td>
-                        <td><?php echo htmlspecialchars($row['cantidad']); ?></td>
-                        <td><?php echo htmlspecialchars($row['tipo_almacenamiento']); ?></td>
-                        <td><?php echo htmlspecialchars($row['fecha_reabastecimiento'] ? $row['fecha_reabastecimiento']->format('Y-m-d') : 'N/A'); ?></td>
+                        <td><?php echo htmlspecialchars($row['nombre_producto']); ?></td>
+                        <td><?php echo htmlspecialchars($row['descripcion']); ?></td>
+                        <td><?php echo htmlspecialchars($row['precio']); ?></td>
+                        <td><?php echo htmlspecialchars($row['fecha_creacion'] ? $row['fecha_creacion']->format('Y-m-d') : 'N/A'); ?></td>
                         <td class="text-center">
-                            <a href="edit_almacen.php?id=<?php echo $row['id_almacen']; ?>" class="btn btn-default" title="Modificar">
+                            <a href="edit_producto.php?id=<?php echo $row['id_producto']; ?>" class="btn btn-default" title="Modificar">
                                 <i class="fa fa-pencil"></i>
                             </a>
-                            <a href="eliminar_almacen.php?id=<?php echo $row['id_almacen']; ?>" class="btn btn-default" title="Eliminar">
+                            <a href="eliminar_producto.php?id=<?php echo $row['id_producto']; ?>" class="btn btn-default" title="Eliminar">
                                 <i class="fa fa-remove"></i>
                             </a>
                         </td>
@@ -76,24 +72,9 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             </tbody>
         </table>
     </div>
-    <a href="alta_almacen.php" class="btn btn-primary">Agregar Almacén</a>
+    <a href="alta_producto.php" class="btn btn-primary">Agregar Producto</a>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#search').on('input', function() {
-            var searchTerm = $(this).val();
-            $.ajax({
-                url: 'search_almacen.php',
-                method: 'GET',
-                data: { search: searchTerm },
-                success: function(data) {
-                    $('#results').html(data);
-                }
-            });
-        });
-    });
-</script>
 </body>
 </html>

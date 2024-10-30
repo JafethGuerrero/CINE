@@ -3,7 +3,7 @@ include("header.php"); // Verifica que este archivo exista en la ruta correcta
 include("conexion.php");
 
 // Recibimos el id por URL
-$dato = isset($_GET['id_almacen']) ? $_GET['id_almacen'] : null;
+$dato = isset($_GET['id']) ? $_GET['id'] : null;
 
 if ($dato === null) {
     die("No se proporcionó un ID de almacén.");
@@ -66,11 +66,13 @@ if ($post === null) {
                 $cantidad = $_POST['cantidad'];
                 $tipo_almacenamiento = strtoupper($_POST['tipo_almacenamiento']);
                 $fecha_reabastecimiento = $_POST['fecha_reabastecimiento'];
+                $id_almacen = $post['id_almacen']; // Usar el id_almacen original
 
-                // Usar el procedimiento almacenado para actualizar
+                // Preparar la consulta para llamar al procedimiento almacenado de actualización
                 $query = "EXEC sp_update_almacen ?, ?, ?, ?, ?";
-                $params_update = array($post['id_almacen'], $ubicacion_producto, $cantidad, $tipo_almacenamiento, $fecha_reabastecimiento);
+                $params_update = array($ubicacion_producto, $cantidad, $tipo_almacenamiento, $fecha_reabastecimiento, $id_almacen);
 
+                // Ejecutar el procedimiento almacenado
                 $recurso = sqlsrv_query($conn, $query, $params_update);
 
                 if ($recurso) {

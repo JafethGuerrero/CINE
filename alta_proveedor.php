@@ -16,7 +16,7 @@ if (isset($_SESSION['status'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alta de Almacén</title>
+    <title>Alta de Proveedores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .form-container {
@@ -57,30 +57,30 @@ if (isset($_SESSION['status'])) {
 
     <!-- Contenido Principal -->
     <div class="container mt-5">
-        <h2 class="text-center">Alta de Almacén</h2>
+        <h2 class="text-center">Alta de Proveedores</h2>
 
-        <!-- Formulario para agregar al almacén -->
+        <!-- Formulario para agregar proveedor -->
         <div class="form-container">
-            <h4>Agregar a Almacén</h4>
-            <form action="alta_almacen_logic.php" method="POST">
+            <h4>Agregar Proveedor</h4>
+            <form action="alta_proveedor_logic.php" method="POST">
                 <div class="mb-3">
-                    <label for="ubicacion_producto" class="form-label">Ubicación del Producto</label>
-                    <input type="text" class="form-control" id="ubicacion_producto" name="ubicacion_producto" required>
+                    <label for="nombre_proveedor" class="form-label">Nombre del Proveedor</label>
+                    <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor" required>
                 </div>
                 <div class="mb-3">
-                    <label for="cantidad" class="form-label">Cantidad</label>
-                    <input type="number" class="form-control" id="cantidad" name="cantidad" required>
+                    <label for="contacto" class="form-label">Contacto</label>
+                    <input type="text" class="form-control" id="contacto" name="contacto" required>
                 </div>
                 <div class="mb-3">
-                    <label for="tipo_almacenamiento" class="form-label">Tipo de Almacenamiento</label>
-                    <input type="text" class="form-control" id="tipo_almacenamiento" name="tipo_almacenamiento" required>
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="tel" class="form-control" id="telefono" name="telefono" required>
                 </div>
                 <div class="mb-3">
-                    <label for="fecha_reabastecimiento" class="form-label">Fecha de Reabastecimiento</label>
-                    <input type="date" class="form-control" id="fecha_reabastecimiento" name="fecha_reabastecimiento" required>
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Agregar al Almacén</button>
-                <a href="almacen.php" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Agregar Proveedor</button>
+                <a href="proveedores.php" class="btn btn-secondary">Cancelar</a>
             </form>
         </div>
     </div>
