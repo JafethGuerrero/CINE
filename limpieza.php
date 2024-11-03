@@ -1,287 +1,93 @@
-<!DOCTYPE html>
-<html lang="es">
+<?php
+session_start();
+include("header.php");
+include("conexion.php");
+include "footer.php"; // Incluimos el footer
+
+// Consulta para obtener los datos de la vista, incluyendo los nombres de sala y empleado
+$sqlLimpieza = "
+    SELECT 
+        L.id_limpieza,
+        S.nombre AS nombre_sala,
+        E.nombre AS nombre_empleado,
+        L.id_empleado,    -- Asegúrate de incluir este campo
+        L.estado
+    FROM 
+        CINE.dbo.Limpieza L
+    JOIN 
+        CINE.dbo.Salas S ON L.id_salas = S.id_salas
+    JOIN 
+        CINE.dbo.Empleados E ON L.id_empleado = E.id_empleado
+"; 
+$resultLimpieza = sqlsrv_query($conn, $sqlLimpieza);
+
+// Verificar si la consulta se ejecutó correctamente
+if ($resultLimpieza === false) {
+    die("Error en la consulta: " . print_r(sqlsrv_errors(), true));
+}
+
+// Consulta para obtener empleados del puesto de limpieza
+$sqlEmpleados = "SELECT id_empleado, nombre FROM CINE.dbo.Empleados WHERE puesto = 'Limpieza'";
+$resultEmpleados = sqlsrv_query($conn, $sqlEmpleados);
+if ($resultEmpleados === false) {
+    die("Error en la consulta de empleados: " . print_r(sqlsrv_errors(), true));
+}
+?>
+
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Limpieza - Cine</title>
-    <style>
-        /* Barra de navegación */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            background-color: #4CAF50;
-            padding: 10px 20px;
-            color: white;
-            font-size: 1.2em;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 0 15px;
-        }
-        .navbar a:hover {
-            text-decoration: underline;
-        }
-
-        /* Estilos generales */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            text-align: center;
-            padding: 20px;
-            font-size: 2.5em;
-            background-color: #4CAF50;
-            color: white;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-        }
-        .table {
-            width: 100%;
-            margin: 30px 0;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
-        }
-        .table th, .table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        .table th {
-            background-color: #4CAF50;
-            color: white;
-            font-size: 1.2em;
-        }
-        .table td {
-            font-size: 1em;
-        }
-        .table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .table tr:hover {
-            background-color: #f1f1f1;
-        }
-        button {
-            padding: 8px 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 40%;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
-        }
-        .modal-header {
-            font-size: 1.5em;
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close:hover, .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+    <title>Limpieza</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-
-    <!-- Barra de navegación -->
-    <div class="navbar">
-        <div>Panel de Control - Cine</div>
-        <div>
-            <a href="#inicio">Inicio</a>
-            <a href="#salas">Salas</a>
-            <a href="#reportes">Reportes</a>
-            <a href="#perfil">Perfil</a>
-        </div>
-    </div>
-
-    <h1>Panel de Limpieza</h1>
     <div class="container">
-        <!-- Botón para abrir el modal de agregar sala -->
-        <button onclick="abrirAgregarModal()">Agregar Nueva Sala</button>
-
-        <!-- Tabla de salas existentes -->
-        <h2>Salas de Limpieza</h2>
-        <table class="table" id="tablaSalas">
+        <h1 class="mt-5">Limpieza de Salas</h1>
+        <a href="asignar_limpieza.php" class="btn btn-primary mb-3">Asignar Limpieza</a>
+        <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Sala</th>
-                    <th>Encargado</th>
+                    <th>ID</th>
+                    <th>Nombre de Sala</th>
+                    <th>Nombre de Empleado</th>
                     <th>Estado</th>
-                    <th>Cambiar Estado</th>
-                    <th>Reporte de Problemas</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Sala 1</td>
-                    <td>Juan Pérez</td>
-                    <td>Pendiente</td>
-                    <td>
-                        <select onchange="actualizarEstado(this)">
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="En Proceso">En Proceso</option>
-                            <option value="Limpia">Limpia</option>
-                        </select>
-                    </td>
-                    <td><input type="text" placeholder="Describa el problema"><button>Reportar</button></td>
-                    <td>
-                        <button onclick="abrirEditarModal('Sala 1', 'Juan Pérez')">Editar</button>
-                        <button onclick="eliminarSala(this)">Eliminar</button>
-                    </td>
-                </tr>
+                <?php while ($limpieza = sqlsrv_fetch_array($resultLimpieza, SQLSRV_FETCH_ASSOC)): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($limpieza['id_limpieza']); ?></td>
+                        <td><?php echo htmlspecialchars($limpieza['nombre_sala']); ?></td>
+                        <td>
+                            <form action="guardar_cambio_empleado.php" method="POST" class="d-inline">
+                                <input type="hidden" name="id_limpieza" value="<?php echo htmlspecialchars($limpieza['id_limpieza']); ?>">
+                                <select name="empleado" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <?php 
+                                    // Reiniciar el cursor para volver a consultar empleados
+                                    sqlsrv_execute($resultEmpleados);
+                                    while ($empleado = sqlsrv_fetch_array($resultEmpleados, SQLSRV_FETCH_ASSOC)): ?>
+                                        <option value="<?php echo htmlspecialchars($empleado['id_empleado']); ?>" 
+                                            <?php echo ($empleado['id_empleado'] == $limpieza['id_empleado']) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($empleado['nombre']); ?>
+                                        </option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </form>
+                        </td>
+                        <td><?php echo htmlspecialchars($limpieza['estado']); ?></td>
+                        <td>
+                            <?php if ($limpieza['estado'] !== 'Limpiado'): ?>
+                                <a href="cambiar_estado.php?id=<?php echo htmlspecialchars($limpieza['id_limpieza']); ?>" class="btn btn-success">Marcar como Limpiado</a>
+                                <a href="volver_a_ensuciar.php?id=<?php echo htmlspecialchars($limpieza['id_limpieza']); ?>" class="btn btn-danger">Volver a Ensuciar</a>
+                            <?php else: ?>
+                                <span class="text-success">Limpiado</span>
+                                <a href="volver_a_ensuciar.php?id=<?php echo htmlspecialchars($limpieza['id_limpieza']); ?>" class="btn btn-danger">Volver a Ensuciar</a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
             </tbody>
         </table>
     </div>
-
-    <!-- Modal para agregar una sala -->
-    <div id="agregarModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="cerrarModal('agregarModal')">&times;</span>
-            <div class="modal-header">Agregar Nueva Sala</div>
-            <form id="agregarSalaForm">
-                <label for="nuevaSala">Número de Sala:</label>
-                <input type="text" id="nuevaSala" placeholder="Ej. Sala 4">
-                <label for="nuevoEncargado">Encargado:</label>
-                <input type="text" id="nuevoEncargado" placeholder="Nombre del encargado">
-                <button type="button" onclick="agregarSala()">Agregar Sala</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para editar una sala -->
-    <div id="editarModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="cerrarModal('editarModal')">&times;</span>
-            <div class="modal-header">Editar Sala</div>
-            <form id="editarSalaForm">
-                <label for="editarSalaNombre">Sala:</label>
-                <input type="text" id="editarSalaNombre" readonly>
-                <label for="editarEncargado">Encargado:</label>
-                <input type="text" id="editarEncargado">
-                <button type="button" onclick="guardarEdicion()">Guardar Cambios</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Abrir el modal de agregar sala
-        function abrirAgregarModal() {
-            document.getElementById("agregarModal").style.display = "block";
-        }
-
-        // Abrir el modal de editar sala
-        function abrirEditarModal(sala, encargado) {
-            document.getElementById("editarSalaNombre").value = sala;
-            document.getElementById("editarEncargado").value = encargado;
-            document.getElementById("editarModal").style.display = "block";
-        }
-
-        // Cerrar el modal especificado
-        function cerrarModal(modalId) {
-            document.getElementById(modalId).style.display = "none";
-        }
-
-        // Agregar una nueva sala a la tabla
-        function agregarSala() {
-            const sala = document.getElementById("nuevaSala").value;
-            const encargado = document.getElementById("nuevoEncargado").value;
-
-            if (sala && encargado) {
-                const tabla = document.getElementById("tablaSalas").querySelector("tbody");
-                const nuevaFila = document.createElement("tr");
-                nuevaFila.innerHTML = `
-                    <td>${sala}</td>
-                    <td>${encargado}</td>
-                    <td>Pendiente</td>
-                    <td>
-                        <select onchange="actualizarEstado(this)">
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="En Proceso">En Proceso</option>
-                            <option value="Limpia">Limpia</option>
-                        </select>
-                    </td>
-                    <td><input type="text" placeholder="Describa el problema"><button>Reportar</button></td>
-                    <td>
-                        <button onclick="abrirEditarModal('${sala}', '${encargado}')">Editar</button>
-                        <button onclick="eliminarSala(this)">Eliminar</button>
-                    </td>
-                `;
-                tabla.appendChild(nuevaFila);
-                
-                // Limpiar y cerrar modal
-                document.getElementById("nuevaSala").value = "";
-                document.getElementById("nuevoEncargado").value = "";
-                cerrarModal('agregarModal');
-            } else {
-                alert("Por favor, llene todos los campos.");
-            }
-        }
-
-        // Guardar cambios en la edición de una sala
-        function guardarEdicion() {
-            const sala = document.getElementById("editarSalaNombre").value;
-            const encargado = document.getElementById("editarEncargado").value;
-
-            const filas = document.getElementById("tablaSalas").querySelectorAll("tbody tr");
-            for (let fila of filas) {
-                if (fila.cells[0].textContent === sala) {
-                    fila.cells[1].textContent = encargado;
-                    break;
-                }
-            }
-            cerrarModal('editarModal');
-        }
-
-        // Eliminar una sala de la tabla
-        function eliminarSala(boton) {
-            boton.parentNode.parentNode.remove();
-        }
-
-        // Actualizar el estado de la sala
-        function actualizarEstado(select) {
-            const estado = select.value;
-            select.parentNode.previousSibling.previousSibling.textContent = estado;
-        }
-    </script>
-
 </body>
 </html>

@@ -58,7 +58,7 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                         <td><?php echo htmlspecialchars($row['nombre_proveedor']); ?></td>
                         <td><?php echo htmlspecialchars($row['contacto']); ?></td>
                         <td><?php echo htmlspecialchars($row['telefono']); ?></td>
-                        <td><?php echo htmlspecialchars($row['rfc']); ?></td>
+                        <td><?php echo htmlspecialchars($row['RFC']); ?></td>
                         <td><?php echo htmlspecialchars($row['email']); ?></td>
                         <td class="text-center">
                             <a href="edit_proveedor.php?id=<?php echo $row['id_proveedor']; ?>" class="btn btn-default" title="Modificar">
