@@ -47,11 +47,11 @@ if ($post === null) {
                 <label for="descripcion" class="form-label">Descripción (*)</label>
                 <textarea class="form-control" name="descripcion" required><?php echo htmlspecialchars($post['descripcion']); ?></textarea>
 
-                <label for="precio" class="form-label">Precio (*)</label>
-                <input class="form-control" type="number" step="0.01" name="precio" value="<?php echo htmlspecialchars($post['precio']); ?>" required>
-
                 <label for="fecha_creacion" class="form-label">Fecha de Creación (*)</label>
                 <input class="form-control" type="date" name="fecha_creacion" value="<?php echo htmlspecialchars($post['fecha_creacion']->format('Y-m-d')); ?>" required>
+
+                <label for="fecha_caducidad" class="form-label">Fecha de Caducidad (*)</label>
+                <input class="form-control" type="date" name="fecha_caducidad" value="<?php echo htmlspecialchars($post['fecha_caducidad']->format('Y-m-d')); ?>" required>
 
                 <hr>
 
@@ -64,13 +64,13 @@ if ($post === null) {
                 // Recoger los datos del formulario
                 $nombre_producto = strtoupper(trim($_POST['nombre_producto']));
                 $descripcion = trim($_POST['descripcion']);
-                $precio = floatval($_POST['precio']); // Asegúrate de que el precio sea un número
                 $fecha_creacion = $_POST['fecha_creacion'];
+                $fecha_caducidad = $_POST['fecha_caducidad'];
                 $id_producto = $post['id_producto']; // Usar el id_producto original
 
                 // Preparar la consulta para llamar al procedimiento almacenado de actualización
                 $query = "EXEC sp_update_producto ?, ?, ?, ?, ?";
-                $params_update = array($nombre_producto, $descripcion, $precio, $fecha_creacion, $id_producto);
+                $params_update = array($nombre_producto, $descripcion, $fecha_creacion, $fecha_caducidad, $id_producto);
 
                 // Ejecutar el procedimiento almacenado
                 $recurso = sqlsrv_query($conn, $query, $params_update);

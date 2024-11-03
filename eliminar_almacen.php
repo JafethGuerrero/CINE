@@ -32,35 +32,32 @@ if ($post === null) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-  <div class="container">
+<div class="container">
     <div class="row col mt-5">
-          <form method="post" class="form-control">
-
+        <form method="post" class="form-control">
             <fieldset class="form-group">
-              <legend><b>Eliminar Datos del Almacén</b></legend><hr>
+                <legend><b>Eliminar Datos del Almacén</b></legend>
+                <hr>
 
-              <label for="id_almacen" class="form-label">ID Almacén (*)</label>
-              <input class="form-control" type="text" name="id_almacen" required autocomplete="off" value="<?php echo htmlspecialchars($post['id_almacen']); ?>" disabled>
+                <label for="id_almacen" class="form-label">ID Almacén (*)</label>
+                <input class="form-control" type="text" name="id_almacen" required autocomplete="off" value="<?php echo htmlspecialchars($post['id_almacen']); ?>" disabled>
 
-              <label for="ubicacion_producto" class="form-label">Ubicación Producto (*)</label>
-              <input class="form-control" type="text" name="ubicacion_producto" value="<?php echo htmlspecialchars($post['ubicacion_producto']); ?>" disabled>
+                <label for="cantidad" class="form-label">Cantidad (*)</label>
+                <input class="form-control" type="number" name="cantidad" value="<?php echo htmlspecialchars($post['cantidad']); ?>" disabled>
 
-              <label for="cantidad" class="form-label">Cantidad (*)</label>
-              <input class="form-control" type="number" name="cantidad" value="<?php echo htmlspecialchars($post['cantidad']); ?>" disabled>
+                <label for="tipo_almacenamiento" class="form-label">Tipo Almacenamiento (*)</label>
+                <input class="form-control" type="text" name="tipo_almacenamiento" value="<?php echo htmlspecialchars($post['tipo_almacenamiento']); ?>" disabled>
 
-              <label for="tipo_almacenamiento" class="form-label">Tipo Almacenamiento (*)</label>
-              <input class="form-control" type="text" name="tipo_almacenamiento" value="<?php echo htmlspecialchars($post['tipo_almacenamiento']); ?>" disabled>
+                <label for="fecha_reabastecimiento" class="form-label">Fecha Reabastecimiento (*)</label>
+                <input class="form-control" type="text" name="fecha_reabastecimiento" value="<?php echo htmlspecialchars($post['fecha_reabastecimiento']); ?>" disabled>
 
-              <label for="fecha_reabastecimiento" class="form-label">Fecha Reabastecimiento (*)</label>
-              <input class="form-control" type="date" name="fecha_reabastecimiento" value="<?php echo htmlspecialchars($post['fecha_reabastecimiento']->format('Y-m-d')); ?>" disabled>
+                <hr>
 
-              <hr>
-
-              <input class="btn btn-danger" type="submit" name="delete" value="Eliminar Datos" required>
-              <a href="almacen.php" class="btn btn-secondary"> Salir</a>
+                <input class="btn btn-danger" type="submit" name="delete" value="Eliminar Datos" required>
+                <a href="almacen.php" class="btn btn-secondary"> Salir</a>
             </fieldset>
 
-          <?php
+            <?php
             if (isset($_POST['delete'])) {
                 // Usar el procedimiento almacenado para eliminar
                 $query = "EXEC sp_delete_almacen ?";
@@ -81,9 +78,9 @@ if ($post === null) {
                           </div>";
                 }
             }
-          ?>
+            ?>
         </form>
-      </div>
-  </div>
+    </div>
+</div>
 </body>
 </html>

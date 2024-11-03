@@ -64,21 +64,37 @@ if (isset($_SESSION['status'])) {
             <h4>Agregar Proveedor</h4>
             <form action="alta_proveedor_logic.php" method="POST">
                 <div class="mb-3">
-                    <label for="nombre_proveedor" class="form-label">Nombre del Proveedor</label>
+                    <label for="nombre_proveedor" class="form-label">Nombre del Proveedor (*)</label>
                     <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor" required>
                 </div>
                 <div class="mb-3">
-                    <label for="contacto" class="form-label">Contacto</label>
+                    <label for="contacto" class="form-label">Contacto (*)</label>
                     <input type="text" class="form-control" id="contacto" name="contacto" required>
                 </div>
                 <div class="mb-3">
-                    <label for="telefono" class="form-label">Teléfono</label>
+                    <label for="telefono" class="form-label">Teléfono (*)</label>
                     <input type="tel" class="form-control" id="telefono" name="telefono" required>
                 </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                <div class="mb-3 col-md-6">
+                    <label for="RFC" class="form-label">RFC (*)</label>
+                    <input type="text" class="form-control" id="RFC" name="RFC" required>
+                    <small class="form-text text-muted">RFC del proveedor</small>
+                    <div class="invalid-feedback">
+                        Por favor, introduzca un RFC válido.
+                    </div>
+                    <div class="invalid-feedback">
+                        El RFC ya existe.
+                    </div>
+                    <div class="invalid-feedback">
+                        El RFC no puede estar vacío.
+                        <br>
+                        Por favor, introduzca un RFC válido.
+                    </div>
                 </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email (*)</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div> 
                 <button type="submit" class="btn btn-primary">Agregar Proveedor</button>
                 <a href="proveedores.php" class="btn btn-secondary">Cancelar</a>
             </form>

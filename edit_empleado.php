@@ -49,9 +49,6 @@ if ($post === null) {
               <label for="puesto" class="form-label">Puesto (*)</label>
               <input class="form-control" type="text" name="puesto" value="<?php echo htmlspecialchars($post['puesto']); ?>" required>
 
-              <label for="contraseña" class="form-label">Contraseña</label>
-              <input class="form-control" type="text" name="contraseña" value="********" readonly>
-
               <label for="fecha_contratacion" class="form-label">Fecha de Contratación (*)</label>
               <input class="form-control" type="date" name="fecha_contratacion" value="<?php echo $post['fecha_contratacion'] ? htmlspecialchars($post['fecha_contratacion']->format('Y-m-d')) : ''; ?>" required>
 
@@ -77,7 +74,7 @@ if ($post === null) {
                 $salario = $_POST['salario'];
 
                 // Preparar la consulta de actualización
-                $query = "UPDATE empleados SET nombre = ?, puesto = ?, fecha_contratacion = ?, fecha_baja = ?, salario = ? WHERE id_empleado = ?";
+                $query = "EXEC sp_modificar_empleado ?, ?, ?, ?, ?";
                 $params_update = array($nombre, $puesto, $fecha_contratacion, $fecha_baja, $salario, $dato);
 
                 $recurso = sqlsrv_prepare($conn, $query, $params_update);

@@ -1,13 +1,13 @@
 <?php
 include 'conexion.php'; // Incluir el archivo de conexión
-include 'header.php'; // Incluir el encabezado
+include 'headeralm.php'; // Incluir el encabezado
 include 'footer.php'; // Incluir el footer
 
 // Verificar si se ha enviado un término de búsqueda
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Modificar la consulta SQL para incluir la búsqueda
-$sql = "SELECT * FROM Productos";
+$sql = "SELECT id_producto, nombre_producto, descripcion, fecha_creacion, fecha_caducidad FROM Productos";
 if (!empty($searchTerm)) {
     $sql .= " WHERE nombre_producto LIKE ? OR descripcion LIKE ?";
 }
@@ -17,16 +17,23 @@ $params = [];
 if (!empty($searchTerm)) {
     $params = ["%$searchTerm%", "%$searchTerm%"];
 }
+
+// Ejecutar la consulta
 $stmt = sqlsrv_query($conn, $sql, $params);
+
+// Comprobar si la consulta fue exitosa
+if ($stmt === false) {
+    // Mostrar el error de SQL Server
+    die(print_r(sqlsrv_errors(), true));
+}
 ?>
 
 <div class="container mt-5">
     <h2 class="text-center">Lista de Productos</h2>
 
-    <!-- Botones para ver productos y proveedores -->
     <div class="mb-3 text-center">
-        <a href="almacen.php" class="btn btn-info">Ver Almacen</a>
-        <a href="proveedores.php" class="btn btn-warning">Ver Proveedores</a>
+        <a href="almacen.php" class="btn btn-info btn-animate">Ver Almacen</a>
+        <a href="proveedores.php" class="btn btn-warning btn-animate">Ver Proveedores</a>
     </div>
     
     <!-- Formulario de búsqueda -->
@@ -46,8 +53,8 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                     <th>ID</th>
                     <th>Nombre Producto</th>
                     <th>Descripción</th>
-                    <th>Precio</th>
                     <th>Fecha Creación</th>
+                    <th>Fecha Caducidad</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -57,8 +64,8 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                         <td><?php echo htmlspecialchars($row['id_producto']); ?></td>
                         <td><?php echo htmlspecialchars($row['nombre_producto']); ?></td>
                         <td><?php echo htmlspecialchars($row['descripcion']); ?></td>
-                        <td><?php echo htmlspecialchars($row['precio']); ?></td>
                         <td><?php echo htmlspecialchars($row['fecha_creacion'] ? $row['fecha_creacion']->format('Y-m-d') : 'N/A'); ?></td>
+                        <td><?php echo htmlspecialchars($row['fecha_caducidad'] ? $row['fecha_caducidad']->format('Y-m-d') : 'N/A'); ?></td>
                         <td class="text-center">
                             <a href="edit_producto.php?id=<?php echo $row['id_producto']; ?>" class="btn btn-default" title="Modificar">
                                 <i class="fa fa-pencil"></i>

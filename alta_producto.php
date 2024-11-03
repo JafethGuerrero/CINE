@@ -64,16 +64,16 @@ if (isset($_SESSION['status'])) {
             <h4>Agregar Producto</h4>
             <form action="alta_producto_logic.php" method="POST">
                 <div class="mb-3">
-                    <label for="nombre_producto" class="form-label">Nombre del Producto</label>
+                    <label for="nombre_producto" class="form-label">Nombre del Producto (*)</label>
                     <input type="text" class="form-control" id="nombre_producto" name="nombre_producto" required>
                 </div>
                 <div class="mb-3">
-                    <label for="descripcion" class="form-label">Descripción</label>
+                    <label for="descripcion" class="form-label">Descripción (*)</label>
                     <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
                 </div>
                 <div class="mb-3">
-                    <label for="precio" class="form-label">Precio</label>
-                    <input type="number" step="0.01" class="form-control" id="precio" name="precio" required>
+                    <label for="fecha_caducidad" class="form-label">Fecha de Caducidad (*)</label>
+                    <input type="date" class="form-control" id="fecha_caducidad" name="fecha_caducidad" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Agregar Producto</button>
                 <a href="productos.php" class="btn btn-secondary">Cancelar</a>

@@ -50,6 +50,9 @@ if ($post === null) {
                 <label for="telefono" class="form-label">Teléfono (*)</label>
                 <input class="form-control" type="tel" name="telefono" value="<?php echo htmlspecialchars($post['telefono']); ?>" required>
 
+                <label for="RFC" class="form-label">RFC (*)</label>
+                <input class="form-control" type="text" name="RFC" value="<?php echo htmlspecialchars($post['RFC']); ?>" required>
+
                 <label for="email" class="form-label">Email (*)</label>
                 <input class="form-control" type="email" name="email" value="<?php echo htmlspecialchars($post['email']); ?>" required>
 
@@ -65,12 +68,13 @@ if ($post === null) {
                 $nombre_proveedor = strtoupper($_POST['nombre_proveedor']);
                 $contacto = $_POST['contacto'];
                 $telefono = $_POST['telefono'];
+                $RFC = $_POST['RFC'];
                 $email = $_POST['email'];
                 $id_proveedor = $post['id_proveedor']; // Usar el id_proveedor original
 
                 // Preparar la consulta para llamar al procedimiento almacenado de actualización
-                $query = "EXEC sp_update_proveedor ?, ?, ?, ?, ?";
-                $params_update = array($nombre_proveedor, $contacto, $telefono, $email, $id_proveedor);
+                $query = "EXEC sp_update_proveedor ?, ?, ?, ?, ?, ?";
+                $params_update = array($nombre_proveedor, $contacto, $telefono, $RFC, $email, $id_proveedor);
 
                 // Ejecutar el procedimiento almacenado
                 $recurso = sqlsrv_query($conn, $query, $params_update);
@@ -91,7 +95,7 @@ if ($post === null) {
             }
             ?>
         </form>
-    </div>
-</div>
+      </div>
+  </div>
 </body>
 </html>

@@ -6,6 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre_proveedor = $_POST['nombre_proveedor'];
     $contacto = $_POST['contacto'];
     $telefono = $_POST['telefono'];
+    $RFC = $_POST['RFC'];
     $email = $_POST['email'];
 
     // Verificar si el proveedor ya existe
@@ -26,8 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Insertar el nuevo proveedor
-    $sql_proveedor = "INSERT INTO Proveedor (nombre_proveedor, contacto, telefono, email) VALUES (?, ?, ?, ?)";
-    $params_proveedor = array($nombre_proveedor, $contacto, $telefono, $email);
+    $sql_proveedor = "EXEC sp_add_proveedor ?, ?, ?, ?, ?";
+    $params_proveedor = array($nombre_proveedor, $contacto, $telefono, $RFC, $email);
     $stmt_proveedor = sqlsrv_query($conn, $sql_proveedor, $params_proveedor);
 
     if ($stmt_proveedor === false) {

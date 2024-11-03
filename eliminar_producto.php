@@ -48,11 +48,11 @@ if ($post === null) {
               <label for="descripcion" class="form-label">Descripción (*)</label>
               <input class="form-control" type="text" name="descripcion" value="<?php echo htmlspecialchars($post['descripcion']); ?>" disabled>
 
-              <label for="precio" class="form-label">Precio (*)</label>
-              <input class="form-control" type="number" name="precio" value="<?php echo htmlspecialchars($post['precio']); ?>" disabled>
-
               <label for="fecha_creacion" class="form-label">Fecha de Creación (*)</label>
               <input class="form-control" type="date" name="fecha_creacion" value="<?php echo htmlspecialchars($post['fecha_creacion']->format('Y-m-d')); ?>" disabled>
+
+              <label for="fecha_caducidad" class="form-label">Fecha de Caducidad (*)</label>
+              <input class="form-control" type="date" name="fecha_caducidad" value="<?php echo htmlspecialchars($post['fecha_caducidad']->format('Y-m-d')); ?>" disabled>
 
               <hr>
 

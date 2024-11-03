@@ -1,7 +1,7 @@
 <?php
 include 'conexion.php'; // Incluir el archivo de conexión
-include 'header.php'; // Incluir el encabezado
 include 'footer.php'; // Incluir el footer
+include 'headeralm.php'; // Incluir el encabezado
 
 // Verificar si se ha enviado un término de búsqueda
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
@@ -23,10 +23,9 @@ $stmt = sqlsrv_query($conn, $sql, $params);
 <div class="container mt-5">
     <h2 class="text-center">Lista de Proveedores</h2>
 
-    <!-- Botones para ver productos y proveedores -->
     <div class="mb-3 text-center">
-        <a href="almacen.php" class="btn btn-info">Ver Almacen</a>
-        <a href="productos.php" class="btn btn-warning">Ver Productos</a>
+        <a href="almacen.php" class="btn btn-info btn-animate">Ver Almacen</a>
+        <a href="productos.php" class="btn btn-warning btn-animate">Ver Productos</a>
     </div>
     
     <!-- Formulario de búsqueda -->
@@ -47,6 +46,7 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                     <th>Nombre Proveedor</th>
                     <th>Contacto</th>
                     <th>Teléfono</th>
+                    <th>RFC</th>
                     <th>Email</th>
                     <th>Acciones</th>
                 </tr>
@@ -58,6 +58,7 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                         <td><?php echo htmlspecialchars($row['nombre_proveedor']); ?></td>
                         <td><?php echo htmlspecialchars($row['contacto']); ?></td>
                         <td><?php echo htmlspecialchars($row['telefono']); ?></td>
+                        <td><?php echo htmlspecialchars($row['rfc']); ?></td>
                         <td><?php echo htmlspecialchars($row['email']); ?></td>
                         <td class="text-center">
                             <a href="edit_proveedor.php?id=<?php echo $row['id_proveedor']; ?>" class="btn btn-default" title="Modificar">

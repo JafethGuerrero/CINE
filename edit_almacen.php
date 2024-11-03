@@ -41,9 +41,6 @@ if ($post === null) {
                 <label for="id_almacen" class="form-label">ID Almacén (*)</label>
                 <input class="form-control" type="text" name="id_almacen" required autocomplete="off" value="<?php echo htmlspecialchars($post['id_almacen']); ?>" disabled>
 
-                <label for="ubicacion_producto" class="form-label">Ubicación Producto (*)</label>
-                <input class="form-control" type="text" name="ubicacion_producto" value="<?php echo htmlspecialchars($post['ubicacion_producto']); ?>" required>
-
                 <label for="cantidad" class="form-label">Cantidad (*)</label>
                 <input class="form-control" type="number" name="cantidad" value="<?php echo htmlspecialchars($post['cantidad']); ?>" required>
 
@@ -51,7 +48,7 @@ if ($post === null) {
                 <input class="form-control" type="text" name="tipo_almacenamiento" value="<?php echo htmlspecialchars($post['tipo_almacenamiento']); ?>" required>
 
                 <label for="fecha_reabastecimiento" class="form-label">Fecha Reabastecimiento (*)</label>
-                <input class="form-control" type="date" name="fecha_reabastecimiento" value="<?php echo htmlspecialchars($post['fecha_reabastecimiento']->format('Y-m-d')); ?>" required>
+                <input class="form-control" type="text" name="fecha_reabastecimiento" value="<?php echo htmlspecialchars($post['fecha_reabastecimiento']); ?>" required>
 
                 <hr>
 
@@ -62,15 +59,14 @@ if ($post === null) {
             <?php
             if (isset($_POST['update'])) {
                 // Recoger los datos del formulario
-                $ubicacion_producto = strtoupper($_POST['ubicacion_producto']);
                 $cantidad = $_POST['cantidad'];
                 $tipo_almacenamiento = strtoupper($_POST['tipo_almacenamiento']);
                 $fecha_reabastecimiento = $_POST['fecha_reabastecimiento'];
                 $id_almacen = $post['id_almacen']; // Usar el id_almacen original
 
                 // Preparar la consulta para llamar al procedimiento almacenado de actualización
-                $query = "EXEC sp_update_almacen ?, ?, ?, ?, ?";
-                $params_update = array($ubicacion_producto, $cantidad, $tipo_almacenamiento, $fecha_reabastecimiento, $id_almacen);
+                $query = "EXEC sp_update_almacen ?, ?, ?, ?";
+                $params_update = array($cantidad, $tipo_almacenamiento, $fecha_reabastecimiento, $id_almacen);
 
                 // Ejecutar el procedimiento almacenado
                 $recurso = sqlsrv_query($conn, $query, $params_update);

@@ -51,6 +51,9 @@ if ($post === null) {
               <label for="telefono" class="form-label">Teléfono (*)</label>
               <input class="form-control" type="text" name="telefono" value="<?php echo htmlspecialchars($post['telefono']); ?>" disabled>
 
+              <label for="RFC" class="form-label">RFC (*)</label>
+              <input class="form-control" type="text" name="RFC" value="<?php echo htmlspecialchars($post['RFC']); ?>" disabled>
+
               <label for="email" class="form-label">Email (*)</label>
               <input class="form-control" type="email" name="email" value="<?php echo htmlspecialchars($post['email']); ?>" disabled>
 

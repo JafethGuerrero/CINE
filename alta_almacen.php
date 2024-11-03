@@ -1,89 +1,69 @@
 <?php
-session_start();
-include 'header.php'; // Incluir el encabezado
-include 'footer.php'; // Incluir el footer
+include("header.php");
+include("conexion.php");
 
-// Notificación de estado
-if (isset($_SESSION['status'])) {
-    $statusMessage = $_SESSION['status']['message'];
-    $statusType = $_SESSION['status']['type'];
-    unset($_SESSION['status']);
-}
+// Obtener todos los productos
+$queryProductos = "SELECT id_producto, nombre_producto FROM Productos";
+$resultProductos = sqlsrv_query($conn, $queryProductos);
+
+// Obtener todos los proveedores
+$queryProveedores = "SELECT id_proveedor, nombre_proveedor FROM Proveedor";
+$resultProveedores = sqlsrv_query($conn, $queryProveedores);
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alta de Almacén</title>
+    <title>Registrar Almacén</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .form-container {
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-height: 80vh; /* Altura máxima del contenedor */
-            overflow-y: auto; /* Permitir desplazamiento */
-        }
-
-        .notification {
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            margin-top: 10px;
-        }
-    </style>
 </head>
 <body>
-    <!-- Notificación -->
-    <?php if (isset($statusMessage)): ?>
-        <div class="notification alert alert-<?php echo $statusType; ?>" role="alert">
-            <strong><?php echo ucfirst($statusType); ?>:</strong> <?php echo $statusMessage; ?>
+<div class="container mt-5">
+    <h2>Registrar Nuevo Almacén</h2>
+    <form method="post" action="alta_almacen_logic.php">
+        <div class="mb-3">
+            <label for="cantidad" class="form-label">Cantidad (*)</label>
+            <input class="form-control" type="number" name="cantidad" required>
         </div>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const notification = document.querySelector('.notification');
-                notification.style.display = 'block';
-                setTimeout(() => {
-                    notification.style.display = 'none';
-                }, 5000);
-            });
-        </script>
-    <?php endif; ?>
 
-    <!-- Contenido Principal -->
-    <div class="container mt-5">
-        <h2 class="text-center">Alta de Almacén</h2>
-
-        <!-- Formulario para agregar al almacén -->
-        <div class="form-container">
-            <h4>Agregar a Almacén</h4>
-            <form action="alta_almacen_logic.php" method="POST">
-                <div class="mb-3">
-                    <label for="ubicacion_producto" class="form-label">Ubicación del Producto</label>
-                    <input type="text" class="form-control" id="ubicacion_producto" name="ubicacion_producto" required>
-                </div>
-                <div class="mb-3">
-                    <label for="cantidad" class="form-label">Cantidad</label>
-                    <input type="number" class="form-control" id="cantidad" name="cantidad" required>
-                </div>
-                <div class="mb-3">
-                    <label for="tipo_almacenamiento" class="form-label">Tipo de Almacenamiento</label>
-                    <input type="text" class="form-control" id="tipo_almacenamiento" name="tipo_almacenamiento" required>
-                </div>
-                <div class="mb-3">
-                    <label for="fecha_reabastecimiento" class="form-label">Fecha de Reabastecimiento</label>
-                    <input type="date" class="form-control" id="fecha_reabastecimiento" name="fecha_reabastecimiento" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Agregar al Almacén</button>
-                <a href="almacen.php" class="btn btn-secondary">Cancelar</a>
-            </form>
+        <div class="mb-3">
+            <label for="tipo_almacenamiento" class="form-label">Tipo Almacenamiento (*)</label>
+            <input class="form-control" type="text" name="tipo_almacenamiento" required>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <div class="mb-3">
+            <label for="fecha_reabastecimiento" class="form-label">Fecha Reabastecimiento (*)</label>
+            <input class="form-control" type="text" name="fecha_reabastecimiento" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_producto" class="form-label">Seleccionar Producto (*)</label>
+            <select class="form-select" name="id_producto" required>
+                <option value="">Seleccione un producto</option>
+                <?php while ($producto = sqlsrv_fetch_array($resultProductos)): ?>
+                    <option value="<?php echo htmlspecialchars($producto['id_producto']); ?>">
+                        <?php echo htmlspecialchars($producto['nombre_producto']); ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_proveedor" class="form-label">Seleccionar Proveedor (*)</label>
+            <select class="form-select" name="id_proveedor" required>
+                <option value="">Seleccione un proveedor</option>
+                <?php while ($proveedor = sqlsrv_fetch_array($resultProveedores)): ?>
+                    <option value="<?php echo htmlspecialchars($proveedor['id_proveedor']); ?>">
+                        <?php echo htmlspecialchars($proveedor['nombre_proveedor']); ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Registrar Almacén</button>
+        <a href="almacen.php" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
 </body>
 </html>
