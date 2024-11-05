@@ -10,7 +10,7 @@ $sqlLimpieza = "
         L.id_limpieza,
         S.nombre AS nombre_sala,
         E.nombre AS nombre_empleado,
-        L.id_empleado,    -- Asegúrate de incluir este campo
+        L.id_empleado,
         L.estado
     FROM 
         CINE.dbo.Limpieza L
@@ -24,13 +24,6 @@ $resultLimpieza = sqlsrv_query($conn, $sqlLimpieza);
 // Verificar si la consulta se ejecutó correctamente
 if ($resultLimpieza === false) {
     die("Error en la consulta: " . print_r(sqlsrv_errors(), true));
-}
-
-// Consulta para obtener empleados del puesto de limpieza
-$sqlEmpleados = "SELECT id_empleado, nombre FROM CINE.dbo.Empleados WHERE puesto = 'Limpieza'";
-$resultEmpleados = sqlsrv_query($conn, $sqlEmpleados);
-if ($resultEmpleados === false) {
-    die("Error en la consulta de empleados: " . print_r(sqlsrv_errors(), true));
 }
 ?>
 
@@ -63,8 +56,9 @@ if ($resultEmpleados === false) {
                                 <input type="hidden" name="id_limpieza" value="<?php echo htmlspecialchars($limpieza['id_limpieza']); ?>">
                                 <select name="empleado" class="form-select form-select-sm" onchange="this.form.submit()">
                                     <?php 
-                                    // Reiniciar el cursor para volver a consultar empleados
-                                    sqlsrv_execute($resultEmpleados);
+                                    // Consulta para obtener empleados del puesto de limpieza en cada iteración
+                                    $sqlEmpleados = "SELECT id_empleado, nombre FROM CINE.dbo.Empleados WHERE puesto = 'Limpieza'";
+                                    $resultEmpleados = sqlsrv_query($conn, $sqlEmpleados);
                                     while ($empleado = sqlsrv_fetch_array($resultEmpleados, SQLSRV_FETCH_ASSOC)): ?>
                                         <option value="<?php echo htmlspecialchars($empleado['id_empleado']); ?>" 
                                             <?php echo ($empleado['id_empleado'] == $limpieza['id_empleado']) ? 'selected' : ''; ?>>
@@ -83,6 +77,7 @@ if ($resultEmpleados === false) {
                                 <span class="text-success">Limpiado</span>
                                 <a href="volver_a_ensuciar.php?id=<?php echo htmlspecialchars($limpieza['id_limpieza']); ?>" class="btn btn-danger">Volver a Ensuciar</a>
                             <?php endif; ?>
+                            <a href="eliminar_limpieza.php?id=<?php echo htmlspecialchars($limpieza['id_limpieza']); ?>" class="btn btn-danger">Eliminar</a>
                         </td>
                     </tr>
                 <?php endwhile; ?>
