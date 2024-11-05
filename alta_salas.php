@@ -80,7 +80,7 @@ if ($resultPeliculas === false) {
                 </div>
                 <div class="mb-3">
                     <label for="pelicula" class="form-label">Película (*)</label>
-                    <select class="form-select" name="id_pelicula" required>
+                    <select class="form-select" name="id_pelicula">
                         <option value="">Seleccione una película</option>
                         <?php 
                         // Mostrar las películas en el dropdown
