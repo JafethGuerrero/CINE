@@ -1,9 +1,6 @@
 <?php
 session_start();
 include 'footer.php';
-
-
-// Aquí puedes agregar la lógica de verificación de sesión más adelante
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,7 +23,6 @@ include 'footer.php';
             flex-direction: column;
             justify-content: space-between;
             background: linear-gradient(to bottom, #00BFFF 10%, #FFD700 10%, #FF6347 80%, #FF4500 100%);
-            transition: background-color 0.3s, color 0.3s;
         }
 
         /* Barra de Navegación Superior */
@@ -36,17 +32,15 @@ include 'footer.php';
         .navbar-brand, .nav-link {
             color: #FFFFFF !important;
         }
-        .nav-link.active {
-            background-color: #0056b3;
-            border-radius: 5px;
-            color: white !important;
-        }
 
-        /* Estilos del contenedor de botones */
-        .container {
-            padding-top: 40px;
-            padding-bottom: 40px;
-            flex-grow: 1;
+        /* Contenedor de los botones */
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 10px; /* Reducir el margen superior para acercar los botones al header */
         }
 
         /* Botones con imágenes */
@@ -64,22 +58,27 @@ include 'footer.php';
             justify-content: center;
             flex-direction: column;
             color: #FFFFFF;
-            background-color: #007BFF;
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
         }
+
+        /* Estilo de imagen */
+        .btn-area img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            position: absolute;
+        }
+
         .btn-area:hover {
             transform: scale(1.05);
             background-color: #0056b3;
         }
-        .btn-area img {
-            max-width: 80px;
-            max-height: 80px;
-            object-fit: contain;
-            margin-bottom: 10px;
-        }
+
         .btn-area .overlay {
             position: absolute;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.6); /* Fondo oscurecido */
             color: #f1f1f1;
             width: 100%;
             text-align: center;
@@ -120,57 +119,61 @@ include 'footer.php';
     <div class="container">
         <div class="row">
             <!-- Dulcería -->
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <a href="dulceria.php" class="btn btn-area">
-                    <img src="assets/images/dulceria.png" alt="Dulcería">
+                    <img src="logos/dulceria.png" alt="Dulcería">
                     <div class="overlay">Dulcería</div>
                 </a>
             </div>
             <!-- Taquilla -->
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <a href="taquilla.php" class="btn btn-area">
-                    <img src="assets/images/taquilla.png" alt="Taquilla">
+                    <img src="logos/taquilla.png" alt="Taquilla">
                     <div class="overlay">Taquilla</div>
                 </a>
             </div>
             <!-- Almacén -->
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <a href="almacen.php" class="btn btn-area">
-                    <img src="assets/images/almacen.png" alt="Almacén">
+                    <img src="logos/almacen.png" alt="Almacén">
                     <div class="overlay">Almacén</div>
                 </a>
             </div>
         </div>
         <div class="row">
             <!-- Limpieza -->
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <a href="limpieza.php" class="btn btn-area">
-                    <img src="assets/images/limpieza.png" alt="Limpieza">
+                    <img src="logos/limpieza.png" alt="Limpieza">
                     <div class="overlay">Limpieza</div>
                 </a>
             </div>
             <!-- Salas -->
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <a href="salas.php" class="btn btn-area">
-                    <img src="assets/images/salas.png" alt="Salas">
+                    <img src="logos/salas.png" alt="Salas">
                     <div class="overlay">Salas</div>
                 </a>
             </div>
             <!-- Clientes -->
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <a href="Clientes.php" class="btn btn-area">
-                    <img src="assets/images/Clientes.png" alt="Clientes">
+                    <img src="logos/clientes.png" alt="Clientes">
                     <div class="overlay">Clientes</div>
                 </a>
             </div>
             <!-- Empleados -->
-            <div class="col-md-4">
+            <div class="col-md-4 mb-4">
                 <a href="Empleados.php" class="btn btn-area">
-                    <img src="assets/images/Empleados.png" alt="Empleados">
+                    <img src="logos/empleados.png" alt="Empleados">
                     <div class="overlay">Empleados</div>
                 </a>
             </div>
         </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

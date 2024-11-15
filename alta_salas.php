@@ -76,19 +76,13 @@ if ($resultPeliculas === false) {
                 </div>
                 <div class="mb-3">
                     <label for="tipo_proyeccion" class="form-label">Tipo de Proyección (*)</label>
-                    <input type="text" class="form-control" id="tipo_proyeccion" name="tipo_proyeccion" required>
-                </div>
-                <div class="mb-3">
-                    <label for="pelicula" class="form-label">Película (*)</label>
-                    <select class="form-select" name="id_pelicula">
-                        <option value="">Seleccione una película</option>
-                        <?php 
-                        // Mostrar las películas en el dropdown
-                        while ($pelicula = sqlsrv_fetch_array($resultPeliculas, SQLSRV_FETCH_ASSOC)): ?>
-                            <option value="<?php echo htmlspecialchars($pelicula['id_pelicula']); ?>">
-                                <?php echo htmlspecialchars($pelicula['pelicula']); ?> <!-- Asegúrate de que el nombre sea correcto -->
-                            </option>
-                        <?php endwhile; ?>
+                    <select class="form-control" id="tipo_proyeccion" name="tipo_proyeccion" required>
+                            <option value="" disabled selected>Seleccione un tipo de proyección</option>
+                            <option value="2D">2D</option>
+                            <option value="3D">3D</option>
+                            <option value="IMAX">IMAX</option>
+                            <option value="4DX">4DX</option>
+                            <option value="D-BOX">D-BOX</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Agregar Sala</button>

@@ -6,10 +6,13 @@ include 'footer.php'; // Incluir el footer
 // Verificar si se ha enviado un término de búsqueda
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Modificar la consulta SQL para incluir la búsqueda
-$sql = "SELECT id_producto, nombre_producto, descripcion, fecha_creacion, fecha_caducidad FROM Productos";
+// Modificar la consulta SQL para incluir la búsqueda y la categoría
+$sql = "SELECT p.id_producto, p.nombre_producto, p.descripcion, p.fecha_creacion, p.fecha_caducidad, c.nombre_categoria 
+        FROM Productos p
+        LEFT JOIN Categorias c ON p.id_categoria = c.id_categoria"; // Asegúrate de que el campo id_categoria exista en tu base de datos
+
 if (!empty($searchTerm)) {
-    $sql .= " WHERE nombre_producto LIKE ? OR descripcion LIKE ?";
+    $sql .= " WHERE p.nombre_producto LIKE ? OR p.descripcion LIKE ?"; // Asegúrate de usar los alias correctamente
 }
 
 // Preparar y ejecutar la consulta
@@ -55,6 +58,7 @@ if ($stmt === false) {
                     <th>Descripción</th>
                     <th>Fecha Creación</th>
                     <th>Fecha Caducidad</th>
+                    <th>Categoria</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -66,6 +70,7 @@ if ($stmt === false) {
                         <td><?php echo htmlspecialchars($row['descripcion']); ?></td>
                         <td><?php echo htmlspecialchars($row['fecha_creacion'] ? $row['fecha_creacion']->format('Y-m-d') : 'N/A'); ?></td>
                         <td><?php echo htmlspecialchars($row['fecha_caducidad'] ? $row['fecha_caducidad']->format('Y-m-d') : 'N/A'); ?></td>
+                        <td><?php echo htmlspecialchars($row['nombre_categoria']); ?></td>
                         <td class="text-center">
                             <a href="edit_producto.php?id=<?php echo $row['id_producto']; ?>" class="btn btn-default" title="Modificar">
                                 <i class="fa fa-pencil"></i>

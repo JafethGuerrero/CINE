@@ -50,28 +50,14 @@ if ($post === null) {
                     <input class="form-control" type="number" name="cantidad_asientos" value="<?php echo htmlspecialchars($post['cantidad_asientos']); ?>" required>
 
                     <label for="tipo_proyeccion" class="form-label">Tipo de Proyección (*)</label>
-                    <input class="form-control" type="text" name="tipo_proyeccion" value="<?php echo htmlspecialchars($post['tipo_proyeccion']); ?>" required>
-
-                    <label for="pelicula" class="form-label">Película (*)</label>
-                    <select class="form-select" name="id_pelicula" required>
-                        <option value="">Seleccione una película</option>
-                        <?php 
-                        // Consulta para obtener las películas
-                        $sqlPeliculas = "SELECT id_pelicula, pelicula FROM cartelera"; 
-                        $resultPeliculas = sqlsrv_query($conn, $sqlPeliculas);
-
-                        if ($resultPeliculas === false) {
-                            die(print_r(sqlsrv_errors(), true));
-                        }
-
-                        // Mostrar las películas en el dropdown
-                        while ($pelicula = sqlsrv_fetch_array($resultPeliculas, SQLSRV_FETCH_ASSOC)): ?>
-                            <option value="<?php echo htmlspecialchars($pelicula['id_pelicula']); ?>" <?php echo ($pelicula['id_pelicula'] == $post['id_pelicula']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($pelicula['pelicula']); ?>
-                            </option>
-                        <?php endwhile; ?>
+                    <select class="form-control" name="tipo_proyeccion" required>
+                        <option value="" disabled selected>Seleccione un tipo de proyección</option>
+                        <option value="2D" <?php echo (htmlspecialchars($post['tipo_proyeccion']) == '2D') ? 'selected' : ''; ?>>2D</option>
+                        <option value="3D" <?php echo (htmlspecialchars($post['tipo_proyeccion']) == '3D') ? 'selected' : ''; ?>>3D</option>
+                        <option value="IMAX" <?php echo (htmlspecialchars($post['tipo_proyeccion']) == 'IMAX') ? 'selected' : ''; ?>>IMAX</option>
+                        <option value="4DX" <?php echo (htmlspecialchars($post['tipo_proyeccion']) == '4DX') ? 'selected' : ''; ?>>4DX</option>
+                        <option value="D-BOX" <?php echo (htmlspecialchars($post['tipo_proyeccion']) == 'D-BOX') ? 'selected' : ''; ?>>D-BOX</option>
                     </select>
-
                     <hr>
 
                     <input class="btn btn-success" type="submit" name="update" value="Actualizar Datos" required>
@@ -84,10 +70,10 @@ if ($post === null) {
                     $nombre = $_POST['nombre'];
                     $cantidad_asientos = $_POST['cantidad_asientos'];
                     $tipo_proyeccion = $_POST['tipo_proyeccion'];
-                    $id_pelicula = $_POST['id_pelicula'];
 
-                    $query = "EXEC sp_update_sala ?, ?, ?, ?, ?";
-                    $params_update = array($dato, $nombre, $cantidad_asientos, $tipo_proyeccion, $id_pelicula);
+                    // Procedimiento almacenado para actualizar la sala
+                    $query = "EXEC sp_update_sala ?, ?, ?, ?"; // Corregir la cantidad de parámetros
+                    $params_update = array($dato, $nombre, $cantidad_asientos, $tipo_proyeccion);
                     $res_update = sqlsrv_query($conn, $query, $params_update);
 
                     if ($res_update) {

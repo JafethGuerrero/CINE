@@ -33,12 +33,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt_proveedor === false) {
         $_SESSION['status'] = ['message' => "Error al agregar proveedor: " . print_r(sqlsrv_errors(), true), 'type' => 'error'];
-        header("Location: alta_almacen.php");
+        header("Location: proveedores.php");
         exit();
     }
 
     $_SESSION['status'] = ['message' => "Proveedor agregado exitosamente.", 'type' => 'success'];
-    header("Location: alta_almacen.php");
+    header("Location: proveedores.php");
     exit();
 }
 ?>

@@ -27,11 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar si la inserción fue exitosa
     if ($stmt === false) {
         $_SESSION['status'] = "Error en la inserción: " . print_r(sqlsrv_errors(), true);
-        header("Location: alta_empleado.php");
+        header("Location: empleados.php");
         exit();
     } else {
         $_SESSION['status'] = "Empleado agregado exitosamente.";
-        header("Location: alta_empleado.php");
+        header("Location: empleados.php");
         exit();
     }
 
@@ -166,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="number" step="0.01" class="form-control" id="salario" name="salario" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Agregar Empleado</button>
-                <a href="empleado.php" class="btn btn-secondary">Cancelar</a> 
+                <a href="empleados.php" class="btn btn-secondary">Cancelar</a> 
             </form>
         </div>
     </div>

@@ -3,6 +3,9 @@ session_start();
 include 'header.php'; // Incluir el encabezado
 include 'footer.php'; // Incluir el footer
 
+// Conexión a la base de datos
+include 'conexion.php'; // Asegúrate de que la conexión está establecida correctamente
+
 // Notificación de estado
 if (isset($_SESSION['status'])) {
     $statusMessage = $_SESSION['status']['message'];
@@ -75,11 +78,34 @@ if (isset($_SESSION['status'])) {
                     <label for="fecha_caducidad" class="form-label">Fecha de Caducidad (*)</label>
                     <input type="date" class="form-control" id="fecha_caducidad" name="fecha_caducidad" required>
                 </div>
+                <!-- Desplegable de Categorías -->
+                <div class="mb-3">
+                    <label for="categoria" class="form-label">Categoría (*)</label>
+                    <select class="form-select" name="categoria" id="categoria" required>
+                        <option value="">Seleccione una opción</option>
+                        <?php
+                        // Consulta para obtener las categorías desde la base de datos
+                        $queryCategorias = "SELECT * FROM Categorias";
+                        $resultCategorias = sqlsrv_query($conn, $queryCategorias); // Usando sqlsrv_query en lugar de query
+
+                        // Comprobar si la consulta se realizó correctamente
+                        if ($resultCategorias === false) {
+                            die(print_r(sqlsrv_errors(), true));
+                        }
+
+                        // Mostrar las categorías en el desplegable
+                        while ($categoria = sqlsrv_fetch_array($resultCategorias, SQLSRV_FETCH_ASSOC)) {
+                            echo "<option value='" . htmlspecialchars($categoria['id_categoria']) . "'>" . htmlspecialchars($categoria['nombre_categoria']) . "</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary">Agregar Producto</button>
                 <a href="productos.php" class="btn btn-secondary">Cancelar</a>
             </form>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -28,11 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar si la inserción fue exitosa
     if ($stmt === false) {
         $_SESSION['status'] = ['message' => "Error en la inserción: " . print_r(sqlsrv_errors(), true), 'type' => 'error'];
-        header("Location: alta_cliente.php");
+        header("Location: clientes.php");
         exit();
     } else {
         $_SESSION['status'] = ['message' => "Cliente agregado exitosamente.", 'type' => 'success'];
-        header("Location: alta_cliente.php");
+        header("Location: clientes.php");
         exit();
     }
 

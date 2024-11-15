@@ -24,7 +24,6 @@ $stmt = sqlsrv_query($conn, $sql, $params);
             <th>ID</th>
             <th>Nombre</th>
             <th>Puesto</th>
-            <th>Contraseña</th>
             <th>Fecha de Contratación</th>
             <th>Fecha Baja</th>
             <th>Salario</th>
@@ -37,7 +36,6 @@ $stmt = sqlsrv_query($conn, $sql, $params);
                 <td><?php echo $row['id_empleado']; ?></td>
                 <td><?php echo htmlspecialchars($row['nombre']); ?></td>
                 <td><?php echo htmlspecialchars($row['puesto']); ?></td>
-                <td><?php echo isset($row['contraseña']) ? htmlspecialchars($row['contraseña']) : 'No disponible'; ?></td>
                 <td><?php echo $row['fecha_contratacion'] ? $row['fecha_contratacion']->format('Y-m-d') : 'No disponible'; ?></td>
                 <td><?php echo $row['fecha_baja'] ? $row['fecha_baja']->format('Y-m-d') : 'No disponible'; ?></td>
                 <td><?php echo $row['salario']; ?></td>

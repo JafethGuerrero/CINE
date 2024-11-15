@@ -23,8 +23,7 @@ $resultSalas = sqlsrv_query($conn, $querySalas);
                 <th>ID Sala</th>
                 <th>Nombre</th>
                 <th>Cantidad de Asientos</th>
-                <th>Tipo de Proyección</th>
-                <th>Pelicula</th>
+                <th>Tipo Proyección</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -35,7 +34,6 @@ $resultSalas = sqlsrv_query($conn, $querySalas);
                     <td><?php echo htmlspecialchars($sala['nombre']); ?></td>
                     <td><?php echo htmlspecialchars($sala['cantidad_asientos']); ?></td>
                     <td><?php echo htmlspecialchars($sala['tipo_proyeccion']); ?></td>
-                    <td><?php echo htmlspecialchars($sala['pelicula']); ?></td>
                     <td>
                         <a href="edit_salas.php?id=<?php echo htmlspecialchars($sala['id_salas']); ?>" class="btn btn-warning" title = "Modificar">
                             <i class="fa fa-pencil"></i>

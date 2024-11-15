@@ -25,6 +25,7 @@ if ($post === null) {
     die("No se encontró el producto con el ID proporcionado.");
 }
 ?>
+
 <html>
 <head>
     <title>Actualizar Producto</title>
@@ -52,6 +53,29 @@ if ($post === null) {
 
                 <label for="fecha_caducidad" class="form-label">Fecha de Caducidad (*)</label>
                 <input class="form-control" type="date" name="fecha_caducidad" value="<?php echo htmlspecialchars($post['fecha_caducidad']->format('Y-m-d')); ?>" required>
+                
+                <!-- Categoría -->
+                <label for="categoria" class="form-label">Categoría (*)</label>
+                <select class="form-select" name="categoria" required>
+                    <option value="">Seleccione una opción</option>
+                    <?php
+                    // Realizamos la consulta a la base de datos para obtener las categorías
+                    $queryCategorias = "SELECT id_categoria, nombre FROM Categorias"; // Consulta para obtener las categorías
+                    $resultCategorias = sqlsrv_query($conn, $queryCategorias);
+
+                    // Verificamos si la consulta devuelve resultados
+                    if ($resultCategorias === false) {
+                        die(print_r(sqlsrv_errors(), true)); // Si ocurre un error en la consulta, lo mostramos
+                    }
+
+                    // Mostramos las categorías en el select
+                    while ($categoria = sqlsrv_fetch_array($resultCategorias, SQLSRV_FETCH_ASSOC)) {
+                        // Verificamos si la categoría actual es la que corresponde al producto
+                        $selected = ($categoria['id_categoria'] == $post['id_categoria']) ? 'selected' : '';
+                        echo "<option value='" . htmlspecialchars($categoria['id_categoria']) . "' $selected>" . htmlspecialchars($categoria['nombre']) . "</option>";
+                    }
+                    ?>
+                </select>
 
                 <hr>
 
@@ -67,10 +91,11 @@ if ($post === null) {
                 $fecha_creacion = $_POST['fecha_creacion'];
                 $fecha_caducidad = $_POST['fecha_caducidad'];
                 $id_producto = $post['id_producto']; // Usar el id_producto original
+                $categoria = $_POST['categoria']; // Obtener la categoría seleccionada
 
                 // Preparar la consulta para llamar al procedimiento almacenado de actualización
-                $query = "EXEC sp_update_producto ?, ?, ?, ?, ?";
-                $params_update = array($nombre_producto, $descripcion, $fecha_creacion, $fecha_caducidad, $id_producto);
+                $query = "EXEC sp_update_producto ?, ?, ?, ?, ?, ?";
+                $params_update = array($nombre_producto, $descripcion, $fecha_creacion, $fecha_caducidad, $categoria, $id_producto);
 
                 // Ejecutar el procedimiento almacenado
                 $recurso = sqlsrv_query($conn, $query, $params_update);
