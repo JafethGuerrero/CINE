@@ -1,24 +1,38 @@
 <?php
-include 'conexion.php'; // Incluir el archivo de conexión
+include 'conexion.php'; // Incluir conexión
 
-// Verificar si se ha enviado un término de búsqueda
+// Obtener parámetros de búsqueda y paginación
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
-// Modificar la consulta SQL para incluir la búsqueda
+// Configurar el límite de registros por página
+$limit = 10;
+$offset = ($page - 1) * $limit;
+
+// Modificar la consulta SQL
 $sql = "SELECT * FROM empleados";
-if (!empty($searchTerm)) {
-    $sql .= " WHERE nombre LIKE ? OR puesto LIKE ?";
-}
-
-// Preparar y ejecutar la consulta
 $params = [];
 if (!empty($searchTerm)) {
-    $params = ["%$searchTerm%", "%$searchTerm%"];
+    $sql .= " WHERE nombre LIKE ? OR puesto LIKE ? OR salario LIKE ?";
+    $params = ["%$searchTerm%", "%$searchTerm%", "%$searchTerm%"];
 }
+$sql .= " ORDER BY id_empleado OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+array_push($params, $offset, $limit);
+
+// Ejecutar la consulta principal
 $stmt = sqlsrv_query($conn, $sql, $params);
+
+// Contar el total de registros
+$sqlCount = "SELECT COUNT(*) AS total FROM empleados";
+if (!empty($searchTerm)) {
+    $sqlCount .= " WHERE nombre LIKE ? OR puesto LIKE ? OR salario LIKE ?";
+}
+$stmtCount = sqlsrv_query($conn, $sqlCount, array_slice($params, 0, -2));
+$totalRows = sqlsrv_fetch_array($stmtCount, SQLSRV_FETCH_ASSOC)['total'];
+$totalPages = ceil($totalRows / $limit);
 ?>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>ID</th>
@@ -51,3 +65,14 @@ $stmt = sqlsrv_query($conn, $sql, $params);
         <?php endwhile; ?>
     </tbody>
 </table>
+
+<!-- Paginación -->
+<nav>
+    <ul class="pagination">
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
+                <a class="page-link" href="#" data-page="<?php echo $i; ?>"><?php echo $i; ?></a>
+            </li>
+        <?php endfor; ?>
+    </ul>
+</nav>

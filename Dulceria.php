@@ -3,27 +3,86 @@ include 'conexion.php'; // Incluir el archivo de conexión
 include 'header.php'; // Incluir el encabezado
 include 'footer.php'; // Incluir el footer
 
-// Consulta para obtener las categorías de productos de la tabla 'almacen'
-$sql = "SELECT DISTINCT categoria FROM almacen";
+// Consulta para obtener las categorías de la tabla 'Categorias'
+$sql = "SELECT nombre_categoria FROM Categorias";
 $stmt = sqlsrv_query($conn, $sql);
 
 $categories = [];
 if ($stmt) {
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-        $categories[] = $row['categoria'];
+        $categories[] = $row['nombre_categoria'];
     }
 }
+
+if($conn === false){
+    die('No pudo conectarse con el servidor SQL');
+}
+
+$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+$cutomerData = null;
+
+if($searchTerm){
+    $sql = "SELECT id_cliente, nombre FROM clientes WHERE nombre LIKE ?";
+    $params = ["%$searchTerm%"];
+    $stmt = sqlsrv_query($conn, $sql, $params);
+    if($stmt === false){
+        die('No pudo conectarse con el servidor SQL');
+    }
+    if(sqlsrv_has_rows($stmt)){
+        $cutomerData = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+    }
+}
+
+$sql = "SELECT nombre_categoria FROM Categorias";
+$stmt = sqlsrv_query($conn, $sql);
+if($stmt === false){
+    die(print_r(sqlsrv_errors(), true));
+}
+
 ?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dulcería - Cine</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
 
 <div class="container mt-5">
     <h2 class="text-center">Dulcería</h2>
 
+    <!-- Barra de búsqueda de clientes -->
+    <div class="d-flex justify-content-center">
+        <input type="text" id="search-client" class="form-control" placeholder="Buscar cliente..." autocomplete="off">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <button type="reset" class="btn btn-danger">Limpiar</button>
+    </div>
+
+    <!-- Resultados de búsqueda de clientes -->
+    <div id="customer-info" class="mt-4">
+        <?php if ($cutomerData): ?>
+            <p><strong>ID:</strong> <?php echo $cutomerData['id_cliente']; ?></p>
+            <p><strong>Nombre:</strong> <?php echo $cutomerData['nombre']; ?></p>
+            <p><strong>Correo Electrónico:</strong> <?php echo $cutomerData['correo']; ?></p>
+            <p><strong>Teléfono:</strong> <?php echo $cutomerData['telefono']; ?></p>
+        <?php else: ?>
+            <?php if($searchTerm): ?>
+                <p class="text-danger">Cliente no encontrado. Por favor, verifica la información.</p>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+           
     <!-- Sección de categorías de productos -->
-    <h4 class="text-center">Selecciona una Categoría</h4>
-    <div class="d-flex justify-content-center flex-wrap">
+    <div class="d-flex justify-content-center flex-wrap mt-4">
         <?php if ($categories): ?>
             <?php foreach ($categories as $category): ?>
-                <button class="btn btn-warning m-2 category-button" data-category="<?php echo htmlspecialchars($category); ?>">
+                <button class="btn btn-info m-2 category-button btn-lg" data-category="<?php echo htmlspecialchars($category); ?>">
                     <?php echo htmlspecialchars($category); ?>
                 </button>
             <?php endforeach; ?>
@@ -39,7 +98,7 @@ if ($stmt) {
             <thead>
                 <tr>
                     <th>Producto</th>
-                    <th>Precio</th>
+                    <th>Cantidad en Almacén</th>
                     <th>Acción</th>
                 </tr>
             </thead>
@@ -57,12 +116,35 @@ if ($stmt) {
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
 <script>
     $(document).ready(function() {
+        // Búsqueda de cliente con AJAX
+        $('#search-client').on('keyup', function() {
+            let searchValue = $(this).val();
+            if (searchValue.length > 0) {
+                $.ajax({
+                    url: '',
+                    type: 'GET',
+                    data: { search: searchValue },
+                    success: function(response) {
+                        $('#search-results').html(response);
+                    }
+                });
+            } else {
+                $('#search-results').empty();
+            }
+        });
+
+        // Seleccionar un cliente de los resultados de búsqueda
+        $(document).on('click', '.cliente-item', function() {
+            const clientId = $(this).data('id');
+            const clientName = $(this).data('nombre');
+            $('#search-results').empty();
+            $('#search-client').val(clientName); // Mostrar el nombre del cliente en el input
+            window.clientId = clientId; // Guardar el ID del cliente seleccionado
+            $('#product-list').removeClass('d-none');
+        });
+
         // Manejar la selección de categoría
         $('.category-button').on('click', function() {
             const category = $(this).data('category');
@@ -70,7 +152,7 @@ if ($stmt) {
 
             // Cargar productos de la categoría seleccionada
             $.ajax({
-                url: 'get_products.php', // Archivo PHP que devolverá los productos
+                url: 'get_products.php',
                 type: 'GET',
                 data: { category: category },
                 success: function(data) {
@@ -81,6 +163,11 @@ if ($stmt) {
 
         // Manejar la adición de productos al pedido
         $(document).on('click', '.add-to-order', function() {
+            if (!window.clientId) {
+                alert('Debe seleccionar un cliente antes de agregar productos.');
+                return;
+            }
+
             const productName = $(this).data('name');
             const productPrice = $(this).data('price');
 
@@ -91,11 +178,60 @@ if ($stmt) {
 
         // Manejar la confirmación del pedido
         $('#confirm-order').on('click', function() {
+            if (!window.clientId) {
+                alert('Debe seleccionar un cliente para confirmar el pedido.');
+                return;
+            }
+
             alert('Pedido confirmado. ¡Gracias por su compra!');
             $('#order-list').empty();
             $('#order-info').addClass('d-none');
         });
     });
 </script>
+
+<style>
+    /* Estilo de los botones de categoría */
+    .category-button {
+        width: 200px;
+        height: 80px;
+        font-size: 18px;
+        margin-bottom: 30px;
+        position: relative;
+        border-radius: 10px;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFFFFF;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .category-button:hover {
+        transform: scale(1.1);
+        background-color: #007bff;
+    }
+
+    .category-button:active {
+        transform: scale(0.95);
+        background-color: #0056b3;
+    }
+
+    /* Estilo de los resultados de búsqueda de clientes */
+    #search-results {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .cliente-item {
+        cursor: pointer;
+    }
+
+    .cliente-item:hover {
+        background-color: #f0f0f0;
+    }
+</style>
+
 </body>
 </html>

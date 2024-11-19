@@ -43,6 +43,8 @@ if ($stmtSalas === false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taquilla</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         /* Estilos para el contenedor del canvas */
@@ -131,13 +133,96 @@ if ($stmtSalas === false) {
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 999;
         }
+         /* Contenedor para centrar los botones */
+         .btn-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        /* Estilo general de los botones */
+        .animated-btn {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 8px;
+            margin: 10px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Efectos de hover */
+        .animated-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Colores de los botones */
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        /* Imagen dentro del botón */
+        .animated-btn img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* Efecto de onda */
+        .animated-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .animated-btn:hover::before {
+            width: 200%;
+            height: 200%;
+        }
+
+        /* Contenido del botón */
+        .animated-btn span {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
 <div class="container mt-5">
     <h2 class="text-center">Taquilla</h2>
 
-    <form id="search-form" class="mb-4" method="GET">
+    <div class="btn-container">
+    <a href="tickets.php" class="animated-btn btn-primary">
+        <i class="bi bi-ticket-perforated-fill"></i>
+        <span>Ver Boletos</span>
+    </a>
+    <a href="cartelera.php" class="animated-btn btn-secondary">
+        <i class="bi bi-film"></i>
+        <span>Ver Cartelera</span>
+    </a>
+</div>
+
+    <!-- Barra de búsqueda -->
+    <div class="d-flex justify-content align-items-center mb-3">
+    <form id="search-form" class="d-flex">
         <div class="input-group">
             <input type="text" id="search" name="search" class="form-control" placeholder="Buscar cliente por ID, nombre o celular..." value="<?php echo htmlspecialchars($searchTerm); ?>">
             <div class="input-group-append">
@@ -145,7 +230,12 @@ if ($stmtSalas === false) {
             </div>
         </div>
     </form>
+    <a href="asignar_horarios.php" class="btn btn-success" title="Asignar Horarios y Películas">
+    <i class="fas fa-circle-plus"></i>
+</a>
 
+    
+</div>
     <div id="customer-info" class="text-center mb-4">
         <?php if ($customerData): ?>
             <p><strong>ID:</strong> <?php echo htmlspecialchars($customerData['id_cliente']); ?></p>
@@ -195,11 +285,7 @@ if ($stmtSalas === false) {
     </div>
 </div>
 
-<!-- Agregamos botones para redirigir a otras páginas -->
-<div class="text-center mt-4">
-    <a href="tickets.php" class="btn btn-primary">Ver Boletos</a>
-    <a href="cartelera.php" class="btn btn-secondary">Ver Cartelera</a>
-</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

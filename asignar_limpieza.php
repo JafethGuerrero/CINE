@@ -90,6 +90,7 @@ if ($resultEmpleados === false) {
                                   <a href='./salas.php' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
                                   <strong>¡Excelente!</strong> Limpieza asignada exitosamente.
                               </div>";
+                        header("Location: salas.php");
                     } else {
                         echo "<br><br>
                               <div class='alert alert-danger alert-dismissible'>

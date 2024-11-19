@@ -1,5 +1,5 @@
 <?php
-include("header.php"); // Verifica que este archivo exista en la ruta correcta
+include("header.php");
 include("conexion.php");
 include "footer.php";
 
@@ -59,7 +59,7 @@ if ($post === null) {
               <input class="form-control" type="text" name="salario" value="<?php echo htmlspecialchars($post['salario']); ?>" required>
 
               <hr>
-
+              <div class="mt-3">
               <input class="btn btn-success" type="submit" name="update" value="Actualizar Datos" required>
               <a href="empleados.php" class="btn btn-secondary"> Salir</a>
             </fieldset>
@@ -73,18 +73,30 @@ if ($post === null) {
                 $fecha_baja = $_POST['fecha_baja'] ? $_POST['fecha_baja'] : null; // Permitir nulo
                 $salario = $_POST['salario'];
 
-                // Preparar la consulta de actualización
-                $query = "EXEC sp_modificar_empleado ?, ?, ?, ?, ?";
-                $params_update = array($nombre, $puesto, $fecha_contratacion, $fecha_baja, $salario, $dato);
+                // Verificar si las fechas son válidas
+                $fecha_contratacion = date('Y-m-d', strtotime($fecha_contratacion));
+                $fecha_baja = $fecha_baja ? date('Y-m-d', strtotime($fecha_baja)) : null;
 
+                // Verificar que las fechas sean correctas
+                if ($fecha_contratacion && !strtotime($fecha_contratacion)) {
+                    die("Error: La fecha de contratación no es válida.");
+                }
+
+                if ($fecha_baja && !strtotime($fecha_baja)) {
+                    die("Error: La fecha de baja no es válida.");
+                }
+
+                // Preparar la consulta de actualización
+                $query = "EXEC sp_modificar_empleado ?, ?, ?, ?, ?, ?";
+                $params_update = array($dato, $nombre, $puesto, $fecha_contratacion, $fecha_baja, $salario);
+
+                // Ejecutar la consulta
                 $recurso = sqlsrv_prepare($conn, $query, $params_update);
 
                 if (sqlsrv_execute($recurso)) {
-                    echo "<br><br>
-                          <div class='alert alert-success alert-dismissible'>
-                              <a href='./empleados.php' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                              <strong>¡Excelente!</strong> Registro actualizado exitosamente.
-                          </div>";
+                    // Redirigir a la página de empleados después de la actualización exitosa
+                    header("Location: empleados.php");
+                    exit;
                 } else {
                     echo "<br><br>
                           <div class='alert alert-danger alert-dismissible'>
@@ -99,4 +111,3 @@ if ($post === null) {
   </div>
 </body>
 </html>
-

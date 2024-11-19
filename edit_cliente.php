@@ -81,15 +81,13 @@ $formatted_phone = (strlen($phone) == 12) ? substr($phone, 0, 3) . '-' . substr(
                 $recurso = sqlsrv_prepare($conn, $query, $params_update);
 
                 if (sqlsrv_execute($recurso)) {
-                    echo "<br><br>
-                          <div class='alert alert-success alert-dismissible'>
-                              <a href='./listClientes.php' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                              <strong>¡Excelente!</strong> Registro actualizado exitosamente.
-                          </div>";
+                    // Redirigir a la página principal (clientes.php)
+                    header("Location: clientes.php");
+                    exit;  // Asegúrate de usar exit para evitar que se ejecute código adicional después de la redirección
                 } else {
                     echo "<br><br>
                           <div class='alert alert-danger alert-dismissible'>
-                              <a href='./listClientes.php' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                              <a href='./clientes.php' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
                               <strong>Error!</strong> No se actualizó el registro. " . print_r(sqlsrv_errors(), true) . "
                           </div>";
                 }

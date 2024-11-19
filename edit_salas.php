@@ -77,11 +77,8 @@ if ($post === null) {
                     $res_update = sqlsrv_query($conn, $query, $params_update);
 
                     if ($res_update) {
-                        echo "<br><br>
-                              <div class='alert alert-success alert-dismissible'>
-                                  <a href='./salas.php' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                                  <strong>¡Excelente!</strong> Sala actualizada exitosamente.
-                              </div>";
+                        header("Location: Salas.php");
+                        exit();                        
                     } else {
                         echo "<br><br>
                               <div class='alert alert-danger alert-dismissible'>

@@ -1,72 +1,49 @@
 <?php
-include 'conexion.php'; // Incluir el archivo de conexión
-include 'header.php'; // Incluir el encabezado
-include 'footer.php'; // Incluir el footer
+include 'header.php'; // Incluir el header
+include 'conexion.php'; // Incluir la conexión a la base de datos
 
 // Verificar si el formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $pelicula = $_POST['pelicula'];
-    $fecha_limit = $_POST['fecha_limit'];
+    $pelicula = $_POST['pelicula']; // Nombre de la película
+    $fecha_inicio = $_POST['fecha_inicio']; // Fecha de inicio
+    $fecha_limit = $_POST['fecha_limit']; // Fecha límite de la película
 
-    // Procesar la imagen
-    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
-        // Definir el nombre y la ubicación de la imagen
-        $imagen_nombre = $_FILES['imagen']['name'];
-        $imagen_tmp = $_FILES['imagen']['tmp_name'];
-        $ruta_destino = "imagenes_peliculas/" . $imagen_nombre;
+    // Preparar el SQL para ejecutar el procedimiento agregar_pelicula
+    $sql = "EXEC agregar_pelicula ?, ?, ?";
+    $params = array($pelicula, $fecha_inicio, $fecha_limit);
 
-        // Verificar si la carpeta de destino existe, si no, intentar crearla
-        if (!is_dir('imagenes_peliculas')) {
-            if (!mkdir('imagenes_peliculas', 0777, true)) {
-                echo "<script>alert('No se pudo crear la carpeta de imágenes.');</script>";
-                exit;
-            }
-        }
+    // Intentar ejecutar la consulta
+    $stmt = sqlsrv_query($conn, $sql, $params);
 
-        // Mover la imagen a la carpeta deseada
-        if (move_uploaded_file($imagen_tmp, $ruta_destino)) {
-            // Si la imagen se subió correctamente, insertar los datos en la base de datos
-            $sql = "EXEC InsertarCartelera ?, ?, ?";
-            $params = array($pelicula, $fecha_limit, $ruta_destino);
-            $stmt = sqlsrv_query($conn, $sql, $params);
-
-            if ($stmt) {
-                echo "<script>alert('Película agregada exitosamente.'); window.location.href='cartelera.php';</script>";
-            } else {
-                echo "<script>alert('Error al agregar la película.');</script>";
-            }
-        } else {
-            echo "<script>alert('Error al subir la imagen. Asegúrate de que la carpeta tenga permisos de escritura.');</script>";
-        }
+    if ($stmt) {
+        echo "<div class='alert alert-success'>Película agregada correctamente sin imagen.</div>";
+        header("Location: cartelera.php");
     } else {
-        echo "<script>alert('Por favor, seleccione una imagen.');</script>";
+        echo "<div class='alert alert-danger'>Error al agregar la película.</div>";
     }
 }
 ?>
 
-<div class="container mt-5">
-    <h4 class="text-center">Agregar Película</h4>
-
-    <form method="POST" enctype="multipart/form-data">
+<div class="container mt-4">
+    <h2>Agregar Película</h2>
+    <form method="POST">
         <div class="form-group">
             <label for="pelicula">Nombre de la Película:</label>
             <input type="text" class="form-control" id="pelicula" name="pelicula" required>
         </div>
         <div class="form-group">
+            <label for="fecha_inicio">Fecha de Inicio:</label>
+            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+        </div>
+        <div class="form-group">
             <label for="fecha_limit">Fecha Límite:</label>
             <input type="date" class="form-control" id="fecha_limit" name="fecha_limit" required>
         </div>
-        <div class="form-group">
-            <label for="imagen">Imagen de la Película:</label>
-            <input type="file" class="form-control-file" id="imagen" name="imagen" required>
-        </div>
-        <button type="submit" class="btn btn-success">Agregar Película</button>
-        <a href="cartelera.php" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Agregar Película</button>
+        <button type="button" class="btn btn-secondary" onclick="location.href='cartelera.php'">Cancelar</button>
     </form>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</body>
-</html>
+<?php
+include 'footer.php'; // Incluir el footer
+?>

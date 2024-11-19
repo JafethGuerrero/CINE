@@ -1,81 +1,111 @@
 <?php
 include 'conexion.php'; // Incluir el archivo de conexión
-include 'footer.php'; // Incluir el footer
 include 'headeralm.php'; // Incluir el encabezado
-
-// Verificar si se ha enviado un término de búsqueda
-$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
-
-// Modificar la consulta SQL para incluir la búsqueda
-$sql = "SELECT * FROM Proveedor";
-if (!empty($searchTerm)) {
-    $sql .= " WHERE nombre_proveedor LIKE ? OR contacto LIKE ?";
-}
-
-// Preparar y ejecutar la consulta
-$params = [];
-if (!empty($searchTerm)) {
-    $params = ["%$searchTerm%", "%$searchTerm%"];
-}
-$stmt = sqlsrv_query($conn, $sql, $params);
 ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Proveedores</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .table-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #343a40;
+            color: white;
+        }
+        .btn-animate {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .btn-animate i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        .btn-animate:hover {
+            background-color: #343a40;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Lista de Proveedores</h2>
+        <div class="mb-3 text-center">
+            <a href="almacen.php" class="btn btn-info btn-animate">
+                <i class="fa fa-archive"></i> Ver Almacén
+            </a>
+            <a href="productos.php" class="btn btn-warning btn-animate">
+    <i class="fa fa-box-open"></i> Ver Productos
+</a>
 
-<div class="container mt-5">
-    <h2 class="text-center">Lista de Proveedores</h2>
-
-    <div class="mb-3 text-center">
-        <a href="almacen.php" class="btn btn-info btn-animate">Ver Almacen</a>
-        <a href="productos.php" class="btn btn-warning btn-animate">Ver Productos</a>
-    </div>
-    
-    <!-- Formulario de búsqueda -->
-    <form id="search-form" class="mb-4">
-        <div class="input-group">
-            <input type="text" id="search" name="search" class="form-control" placeholder="Buscar proveedores..." value="<?php echo htmlspecialchars($searchTerm); ?>">
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-primary">Buscar</button>
-            </div>
         </div>
-    </form>
-
-    <div id="results">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre Proveedor</th>
-                    <th>Contacto</th>
-                    <th>Teléfono</th>
-                    <th>RFC</th>
-                    <th>Email</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($row['id_proveedor']); ?></td>
-                        <td><?php echo htmlspecialchars($row['nombre_proveedor']); ?></td>
-                        <td><?php echo htmlspecialchars($row['contacto']); ?></td>
-                        <td><?php echo htmlspecialchars($row['telefono']); ?></td>
-                        <td><?php echo htmlspecialchars($row['RFC']); ?></td>
-                        <td><?php echo htmlspecialchars($row['email']); ?></td>
-                        <td class="text-center">
-                            <a href="edit_proveedor.php?id=<?php echo $row['id_proveedor']; ?>" class="btn btn-default" title="Modificar">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                            <a href="eliminar_proveedor.php?id=<?php echo $row['id_proveedor']; ?>" class="btn btn-default" title="Eliminar">
-                                <i class="fa fa-remove"></i>
-                            </a>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-    </div>
-    <a href="alta_proveedor.php" class="btn btn-primary">Agregar Proveedor</a>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        
+        <!-- Barra de herramientas -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Formulario de búsqueda -->
+            <form id="search-form" class="d-flex">
+                <input type="text" id="search" name="search" class="form-control me-2" placeholder="Buscar proveedores...">
+                <button type="button" class="btn btn-primary me-2" disabled>Buscar</button> 
+            </form>
+            <!-- Botón de agregar -->
+            <a href="alta_proveedor.php" class="btn btn-success" title="Agregar Proveedor">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>        
+        <!-- Contenedor para los resultados -->
+        <div id="results" class="table-container">
+            <!-- Los resultados dinámicos se cargarán aquí -->
+        </div>
+    </div>    
+    <?php include 'footer.php'; // Incluir el footer ?>    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Función para cargar datos
+            function loadData(page = 1, searchTerm = '') {
+                $.ajax({
+                    url: 'search_proveedores.php', // Archivo PHP que procesa los datos
+                    method: 'GET',
+                    data: { page: page, search: searchTerm },
+                    success: function (data) {
+                        $('#results').html(data);
+                    }
+                });
+            }
+            // Cargar datos al inicio
+            loadData();
+            // Evento para búsqueda mientras se escribe
+            $('#search').on('input', function () {
+                const searchTerm = $(this).val();
+                loadData(1, searchTerm); // Siempre cargar desde la página 1 al hacer búsqueda
+            });
+            // Delegar clic en paginación
+            $(document).on('click', '.pagination a', function (e) {
+                e.preventDefault();
+                const page = $(this).attr('data-page');
+                const searchTerm = $('#search').val();
+                loadData(page, searchTerm); // Cargar la página específica con la búsqueda actual
+            });
+        });
+    </script>
 </body>
 </html>

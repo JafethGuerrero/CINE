@@ -15,7 +15,7 @@ $resultSalas = sqlsrv_query($conn, $querySalas);
 </head>
 <body>
 <div class="container mt-5">
-    <h2>Listado de Salas</h2>
+    <h2 class=text-center>Lista de Salas</h2>
     <a href="alta_salas.php" class="btn btn-primary mb-3">Agregar Nueva Sala</a>
     <table class="table table-striped">
         <thead>

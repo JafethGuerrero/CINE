@@ -16,7 +16,7 @@ $res = sqlsrv_query($conn, $sql, $params);
 
 // Verificar si la consulta se ejecutó correctamente
 if ($res === false) {
-    die("Error en la consulta: " . print_r(sqlsrv_errors(), true));
+    die("Error en la consulta de producto: " . print_r(sqlsrv_errors(), true));
 }
 
 $post = sqlsrv_fetch_array($res);
@@ -60,62 +60,60 @@ if ($post === null) {
                     <option value="">Seleccione una opción</option>
                     <?php
                     // Realizamos la consulta a la base de datos para obtener las categorías
-                    $queryCategorias = "SELECT id_categoria, nombre FROM Categorias"; // Consulta para obtener las categorías
+                    $queryCategorias = "SELECT id_categoria, nombre_categoria FROM Categorias"; 
                     $resultCategorias = sqlsrv_query($conn, $queryCategorias);
 
-                    // Verificamos si la consulta devuelve resultados
                     if ($resultCategorias === false) {
-                        die(print_r(sqlsrv_errors(), true)); // Si ocurre un error en la consulta, lo mostramos
+                        die("Error en la consulta de categorías: " . print_r(sqlsrv_errors(), true));
                     }
 
-                    // Mostramos las categorías en el select
+                    // Mostrar las categorías disponibles
                     while ($categoria = sqlsrv_fetch_array($resultCategorias, SQLSRV_FETCH_ASSOC)) {
-                        // Verificamos si la categoría actual es la que corresponde al producto
                         $selected = ($categoria['id_categoria'] == $post['id_categoria']) ? 'selected' : '';
-                        echo "<option value='" . htmlspecialchars($categoria['id_categoria']) . "' $selected>" . htmlspecialchars($categoria['nombre']) . "</option>";
+                        echo "<option value='" . htmlspecialchars($categoria['id_categoria']) . "' $selected>" . htmlspecialchars($categoria['nombre_categoria']) . "</option>";
                     }
                     ?>
                 </select>
-
                 <hr>
 
-                <input class="btn btn-success" type="submit" name="update" value="Actualizar Datos">
-                <a href="productos.php" class="btn btn-secondary"> Salir</a>
+                <!-- Botones de actualizar y cancelar -->
+                <div class="d-flex justify-content-between">
+                    <input class="btn btn-success btn-sm" type="submit" name="update" value="Actualizar Datos">
+                    <a href="productos.php" class="btn btn-secondary btn-sm">Cancelar</a>
+                </div>
             </fieldset>
-
-            <?php
-            if (isset($_POST['update'])) {
-                // Recoger los datos del formulario
-                $nombre_producto = strtoupper(trim($_POST['nombre_producto']));
-                $descripcion = trim($_POST['descripcion']);
-                $fecha_creacion = $_POST['fecha_creacion'];
-                $fecha_caducidad = $_POST['fecha_caducidad'];
-                $id_producto = $post['id_producto']; // Usar el id_producto original
-                $categoria = $_POST['categoria']; // Obtener la categoría seleccionada
-
-                // Preparar la consulta para llamar al procedimiento almacenado de actualización
-                $query = "EXEC sp_update_producto ?, ?, ?, ?, ?, ?";
-                $params_update = array($nombre_producto, $descripcion, $fecha_creacion, $fecha_caducidad, $categoria, $id_producto);
-
-                // Ejecutar el procedimiento almacenado
-                $recurso = sqlsrv_query($conn, $query, $params_update);
-
-                if ($recurso) {
-                    echo "<br><br>
-                          <div class='alert alert-success alert-dismissible'>
-                              <a href='./productos.php' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                              <strong>¡Excelente!</strong> Registro actualizado exitosamente.
-                          </div>";
-                } else {
-                    echo "<br><br>
-                          <div class='alert alert-danger alert-dismissible'>
-                              <a href='./productos.php' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                              <strong>Error!</strong> No se actualizó el registro. " . print_r(sqlsrv_errors(), true) . "
-                          </div>";
-                }
-            }
-            ?>
         </form>
+
+        <?php
+        // Verificar si el formulario ha sido enviado
+        if (isset($_POST['update'])) {
+            // Recoger los datos del formulario
+            $nombre_producto = strtoupper(trim($_POST['nombre_producto']));
+            $descripcion = trim($_POST['descripcion']);
+            $fecha_creacion = $_POST['fecha_creacion'];
+            $fecha_caducidad = $_POST['fecha_caducidad'];
+            $id_producto = $post['id_producto']; // Usar el id_producto original
+            $categoria = $_POST['categoria']; // Obtener la categoría seleccionada
+
+            // Preparar la consulta para llamar al procedimiento almacenado de actualización
+            $query = "EXEC sp_update_producto ?, ?, ?, ?, ?, ?";
+            $params_update = array($nombre_producto, $descripcion, $fecha_creacion, $fecha_caducidad, $categoria, $id_producto);
+
+            // Ejecutar el procedimiento almacenado
+            $recurso = sqlsrv_query($conn, $query, $params_update);
+
+            if ($recurso) {
+               header("Location: productos.php");
+               exit();
+            } else {
+                echo "<br><br>
+                      <div class='alert alert-danger alert-dismissible'>
+                          <a href='./productos.php' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                          <strong>Error!</strong> No se actualizó el registro. " . print_r(sqlsrv_errors(), true) . "
+                      </div>";
+            }
+        }
+        ?>
     </div>
 </div>
 </body>
